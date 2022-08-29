@@ -144,3 +144,95 @@ Paso 5: `curl -H "Authorization: Basic $(echo -n redes:RYC | base64)" -I http://
 
 Paso 6: `curl -H "Authorization: Basic $(echo -n redes:RYC | base64)" http://www.redes.unlp.edu.ar/restringido/the-end.php `
 <img src="img\tp2ej146.png">
+
+### 15. Utilizando la VM, realice las siguientes pruebas:
+
+### a. Ejecute el comando ’curl www.redes.unlp.edu.ar/extras/prueba-http-1-0.txt’ y copie la salida completa (incluyendo los dos saltos de linea del final).
+
+### b. Desde la consola ejecute el comando telnet www.redes.unlp.edu.ar 80 y luego pegue el contenido que tiene almacenado en el portapapeles. ¿Qué ocurre luego de hacerlo?
+
+<img src="img\tp2ej15b.png">
+
+### c. Repita el proceso anterior, pero copiando la salida del recurso /extras/prueba-http-1-1.txt. Verifique que debería poder pegar varias veces el mismo contenido sin tener que ejecutar telnet nuevamente.
+
+Copiando la salida del recurso la salida es la misma con la diferencia que puedo pegar varias veces el mismo contenido sin tener que ejecutar el comando telnet nuevamente.
+
+### 16. En base a lo obtenido en el ejercicio anterior, responda:
+
+### ¿Qué está haciendo al ejecutar el comando telnet?
+
+Telnet permite el control remoto de los ordenadores por medio de entradas y salidas basadas en texto. Con este objetivo, se crea una conexión cliente-servidor a través del protocolo TCP y del puerto TCP 23, donde el dispositivo controlado ejerce de servidor y espera a los comandos pertinentes.
+
+### ¿Qué método HTTP utilizó? ¿Qué recurso solicitó?
+
+Utilizó el método ` GET`` y solicitó el recurso  `/http/HTTP-1.x/```.
+
+### ¿Qué diferencias notó entre los dos casos? ¿Puede explicar por qué?
+
+La principal diferencia que encontré es que en el primer caso, usando HTTP 1.0, luego de obtener una respuesta la conexión se cierra inmediatamente; mientras que con el protocolo HTTP 1.1 la conexión se mantiene abierta por unos segundos, permitiendo enviar nuevas peticiones.
+
+### ¿Cuál de los dos casos le parece más eficiente? Piense en el ejercicio donde analizó la cantidad de requerimientos necesarios para obtener una página con estilos, javascripts e imágenes. El caso elegido, ¿puede traer asociado algún problema?
+
+Considero que HTTP 1.1 es más eficiente debido a que puedo mandar un request varias veces sin tener que abrir nuevamente la conexión.
+
+### 17. En el siguiente ejercicio veremos la diferencia entre los métodos POST y GET. Para ello, será necesario utilizar la VM y la herramienta Wireshark. Antes de iniciar considere: (puntos a considerar)
+
+### c. Utilizando el analizador de paquetes Wireshark capture los paquetes enviados y recibidos al presionar el botón Enviar.
+
+GET:
+<img src="img\tp2ej17GET.png">
+
+POST:
+<img src="img\tp2ej17POST.png">
+
+### d. ¿Qué diferencias detectó en los mensajes enviados por el cliente?
+
+El cliente permite enviar un formulario por el metodo GET y POST.
+La principal diferencia es que en el GET los mensajes se envian por el URL mientras que en el POST los mensajes se envian en el body de la peticion.
+
+### e. ¿Observó alguna diferencia en el browser si se utiliza un mensaje u otro?
+
+Como GET hace uso de la URL para transferir los parámetros, estos son posibles de observar desde el navegador. En cambio como POST hace uso del cuerpo del request para el envio de los parámetros, estos no estan visibles a simple vista desde el navegador.
+
+### 18. Investigue cuál es el principal uso que se le da a las cabeceras Set-Cookie y Cookie en HTTP y qué relación tienen con el funcionamiento del protocolo HTTP.
+
+La cabecera de respuesta HTTP `Set-Cookie` se usa para enviar cookies desde el servidor al agente de usuario, así el agente de usuario puede enviarlos de vuelta al servidor.
+La cabecera `Cookie` contiene los cookies que el User Agent desea enviar al servidor en un mensaje.
+Estas cabeceras ayuda a manejar las cookies del protocolo HTTP. Una cookie HTTP, cookie web o cookie de navegador es una pequeña pieza de datos que un servidor envía a el navegador web del usuario. El navegador guarda estos datos y los envía de regreso junto con la nueva petición al mismo servidor. Las cookies se usan generalmente para decirle al servidor que dos peticiones tienen su origen en el mismo navegador web lo que permite, por ejemplo, mantener la sesión de un usuario abierta. Las cookies permiten recordar la información de estado en vista a que el protocolo HTTP es un protocolo sin estado.
+
+### 19. ¿Cuál es la diferencia entre un protocolo binario y uno basado en texto? ¿de que tipo de protocolo se trata HTTP/1.0, HTTP/1.1 y HTTP/2?
+
+Un protocolo basado en texto es un protocolo de comunicación cuya representación de contenido está en formato legible por humanos
+Un protocolo binario es un protocolo de comunicación que utiliza todos los valores de un byte, a diferencia del protocolo basado en texto que solo usa valores correspondientes a caracteres legibles por humanos en codificación ASCII. Los protocolos binarios están pensados ​​para ser leídos por una máquina en lugar de un ser humano. Los protocolos binarios tienen la ventaja de la concisión, que se traduce en velocidad de transmisión e interpretación.
+
+HTTP/1.0 y HTTP/1.1 usan protocolo basado en texto mientras que HTTP/2 usa protocolo binario.
+
+### 20. Analice de que se tratan las siguientes características de HTTP/2: stream, frame, server-push
+
+El <b>stream</b> es el intercambio bidireccional de datos de una conexión HTTP establecida, que puede llevar uno o más mensajes.
+Un mensaje es un conjunto de <b>frames</b>. <b>Frame</b> es el patrón de comunicación más pequeño en HTTP/2, cada frame tiene un encabezado para identificar a la secuencia a la que pertenece para después formar un mensaje lógico.
+<br>
+<b>Server Push</b> permite adelantar la carga de los recursos para que se descarguen al mismo tiempo que el HTML, evitando así que el navegador tenga que pedirlos después de descargar y analizar el HTML.
+
+### 21. Responder las siguientes preguntas:
+
+### a. ¿Qué función cumple la cabecera Host en HTTP 1.1? ¿Existía en HTTP 1.0? ¿Qué sucede en HTTP/2?
+
+La cabecera `Host` especifica el nombre de dominio del servidor, y opcionalmente el número de puerto TCP en el que el servidor esta escuchando; si no se provee un puerto se usará el puerto por defecto. En HTTP/1.1 se debe enviar obligatoriamente, mientras que en HTTP/1.0 no era requerido. <br>
+En HTTP/2 el header `Host` se cambió por `authority`, quien contiene la autoridad de la URI destino.
+
+### b. ¿Cómo quedaría en HTTP/2 el siguiente pedido realizado en HTTP/1.1 si se está usando https?
+
+```
+GET /index.php HTTP/1.1
+Host: www.info.unlp.edu.ar
+```
+
+Esta peticion quedaria:
+
+```
+:method GET
+:path /index.php
+:scheme http
+:authority www.info.unlp.edu.ar
+```
