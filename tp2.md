@@ -165,7 +165,7 @@ Telnet permite el control remoto de los ordenadores por medio de entradas y sali
 
 ### ¿Qué método HTTP utilizó? ¿Qué recurso solicitó?
 
-Utilizó el método ` GET`` y solicitó el recurso  `/http/HTTP-1.x/```.
+Utilizó el método ` GET` y solicitó el recurso `/http/HTTP-1.x/`.
 
 ### ¿Qué diferencias notó entre los dos casos? ¿Puede explicar por qué?
 
