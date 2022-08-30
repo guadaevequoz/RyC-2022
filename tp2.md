@@ -88,6 +88,12 @@ La cabecera Date indica la fecha en que se realizó el request.
 
 ### 11. En HTTP/1.0, ¿cómo sabe el cliente que ya recibió todo el objeto solicitado completamente? ¿Y en HTTP/1.1?
 
+En HTTP/1.0 la conexión se mantendrá activa hasta que el cliente haya recibido todo el contenido.
+En HTTP/1.1 podemos asumir que el cliente recibió todo el objeto debido a dos encabezados:
+
+- `Content-Length`: indica el tamaño del objeto.
+- `Connection`: indica si la sesión se mantuvo abierta o se cerro, por lógica si se cerró entonces el cliente recibió todo el objeto.
+
 ### 12. Investigue los distintos tipos de códigos de retorno de un servidor web y su significado. Considere que los mismos se clasifican en categorías (2XX, 3XX, 4XX, 5XX).
 
 Los códigos de retorno son:
@@ -123,7 +129,11 @@ La ultima vez que se modifico la pagina fue el 13 de Abril de 2022.
 
 ### f. Solicite la página nuevamente con curl usando GET, pero esta vez indique que quiere obtenerla sólo si la misma fue modificada en una fecha posterior a la que efectivamente fue modificada. ¿Cómo lo hace? ¿Qué resultado obtuvo? ¿Puede explicar para qué sirve?
 
-Para realizar este requerimiento utilizo el atributo -z, la linea de comando final me quedaria: `curl -z 'Sun, 28 Aug 2022' www.redes.unlp.edu.ar`
+Para realizar este requerimiento utilizo el atributo -z, la linea de comando final me quedaria: `curl -z 'Sun, 28 Aug 2022' www.redes.unlp.edu.ar`. <br>
+Otra opción es utilizar el header `If-Modified-Since:` al cual se le tiene que asignar una fecha (la comparación es menor estricto) y en base a esa fecha se evalua si el archivo fue modificado desde esa fecha. Las respuestas pueden ser:
+
+- Si le pasamos una fecha anterior a la última fecha de modificación, obtenemos la misma respuesta.
+- Si le pasamos una fecha igual o posterior, obtenemos una respuesta con el estado 304 Not Modified.
 
 ### 14. Utilizando curl, acceda al sitio www.redes.unlp.edu.ar/restringido/index.php y siga las instrucciones y las pistas que vaya recibiendo hasta obtener la respuesta final. Será de utilidad para resolver este ejercicio poder analizar tanto el contenido de cada página como los encabezados.
 
@@ -233,6 +243,6 @@ Esta peticion quedaria:
 ```
 :method GET
 :path /index.php
-:scheme http
+:scheme https
 :authority www.info.unlp.edu.ar
 ```
