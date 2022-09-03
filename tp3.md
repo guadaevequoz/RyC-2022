@@ -45,3 +45,94 @@ Un resolver suele hacer sólo consultas recursivas.
 - **TXT:** Este registro hace referencia a un texto. Permite que el administrador inserte texto en la consulta DNS. Esto se utiliza para dejar notas sobre la información de dominio.
 
 ### 7. En Internet, un dominio suele tener más de un servidor DNS. ¿Por qué cree que esto es así?
+
+Un dominio suele tener más de un servidor DNS para que sea posible acceder a ese sitio lo más rápido posible. Con esto me refiero a que si sólo tuviera un sólo servidor y muchos host quisieran acceder a un dominio entonces se saturaria y el tiempo de respuesta seria muy lento. Así mismo, ocurre la misma situación si un host quiere acceder a un dominio que esta muy alejado geograficamente.
+
+### 8. Cuando un dominio cuenta con más de un servidor, uno de ellos es el primario (o maestro) y todos los demás son los secundarios (o esclavos). ¿Cuál es la razón de que sea así?
+
+La razón de la existencia de ambos servidores es que en conjunto facilitan la administración del espacio de nombres de dominio. Básicamente, el servidor primario mantiene la información autoritativa de un nombre de dominio, obtenido desde su propia configuración. Un servidor DNS secundario copia su configuración desde el primario. Así, si es necesario hacer un cambio a la configuración, se modifica el primario y se espera a que los secundarios "se enteren" paulatinamente del cambio.
+En el caso de que el DNS primario deja de responder, la existencia de un secundario ayuda a que el nombre de dominio se siga viendo en Internet. Sin embargo, si el primario está respondiendo, el secundario también recibirá consultas y debe estar actualizado y respondiendo.
+
+### 9. Explique brevemente en qué consiste el mecanismo de transferencia de zona y cuál es su finalidad.
+
+Una transferencia de zona es un tipo de transacción DNS normalmente inducida a través de una consulta tipo “AXFR” para poder replicar bases de datos con registros entre servidores DNS.<br>
+La información contenida en cada transferencia de zona puede entregarnos la información de todos los dominios y/o servidores de cada base de datos de registros en el servidor DNS..<br>
+La finalidad de transferencia de zona es mantener consistencia entre dos o mas servidores DNS, o sea generar concordancia entre un registro DNS en un servidor primario y servidores secundarios, los cuales se actualizan consultando cambios al servidor primario para así actualizar sus registros propios, de esta manera cualquier cambio realizado en el servidor DNS principal se replica hacia el resto de los servidores.
+
+### 10. Imagine que usted es el administrador del dominio de DNS de la UNLP (unlp.edu.ar). A su vez, cada facultad de la UNLP cuenta con un administrador que gestiona su propio dominio (por ejemplo, en el caso de la Facultad de Informática se trata de info.unlp.edu.ar). Suponga que se crea una nueva facultad, Facultad de Redes, cuyo dominio será redes.unlp.edu.ar, y el administrador le indica que quiere poder manejar su propio dominio. ¿Qué debe hacer usted para que el administrador de la Facultad de Redes pueda gestionar el dominio de forma independiente? (Pista: investigue en qué consiste la delegación de dominios).
+
+Para esto tengo que proporcionarle un servidor autoritativo ¿?
+
+### 11. Responda y justifique los siguientes ejercicios
+
+### a. En la VM, utilice el comando dig para obtener la dirección IP del host www.redes.unlp.edu.ar y responda:
+
+<img src="img/tp3-ej1a.png">
+
+### i. ¿La solicitud fue recursiva? ¿Y la respuesta? ¿Cómo lo sabe?
+
+Esta información se puede apreciar en las flags. Se puede ver que tiene las flags `rd` y `ra` las cuales corresponden a _recursion desired_ y _recursion allowed_ respectivamente. Ambas indican que tanto la solicitud como la respuesta fueron recursivas.
+
+### ii. ¿Puede indicar si se trata de una respuesta autoritativa? ¿Qué significa que lo sea?
+
+No es una respuesta autoritativa ya que no tiene el flag `aa`, el cual informa de que es una respuesta autorizada. Una respuesta es autoritativa si la envia el servidor autoritativo del dominio.
+
+### iii. ¿Cuál es la dirección IP del resolver utilizado? ¿Cómo lo sabe?
+
+La dirección IP de resolver es: `172.28.0.29`.
+
+### b. ¿Cuáles son los servidores de correo del dominio redes.unlp.edu.ar? ¿Por qué hay más de uno y qué significan los números que aparecen entre MX y el nombre? Si se quiere enviar un correo destinado a redes.unlp.edu.ar, ¿a qué servidor se le entregará? ¿En qué situación se le entregará al otro?
+
+<img src="img/tp3-ej1b.png">
+NO SÉ
+
+### c. ¿Cuáles son los servidores de DNS del dominio redes.unlp.edu.ar?
+
+### d. Repita la consulta anterior cuatro veces más. ¿Qué observa? ¿Puede explicar a qué se debe?
+
+### e. Observe la información que obtuvo al consultar por los servidores de DNS del dominio. En base a la salida, ¿es posible indicar cuál de ellos es el primario?
+
+### f. Consulte por el registro SOA del dominio y responda.
+
+### i. ¿Puede ahora determinar cuál es el servidor de DNS primario?
+
+### ii. ¿Cuál es el número de serie, qué convención sigue y en qué casos es importante actualizarlo?
+
+### iii. ¿Qué valor tiene el segundo campo del registro? Investigue para qué se usa y como se interpreta el valor.
+
+### iv. ¿Qué valor tiene el TTL de caché negativa y qué significa?
+
+### g. Indique qué valor tiene el registro TXT para el nombre saludo.redes.unlp.edu.ar. Investigue para qué es usado este registro.
+
+### h. Utilizando dig, solicite la transferencia de zona de redes.unlp.edu.ar, analice la salida y responda.
+
+### i. ¿Qué significan los números que aparecen antes de la palabra IN? ¿Cuál es su finalidad?
+
+### ii. ¿Cuántos registros NS observa? Compare la respuesta con los servidores de DNS del dominio redes.unlp.edu.ar que dio anteriormente. ¿Puede explicar a qué se debe la diferencia y qué significa?
+
+### i. Consulte por el registro A de www.redes.unlp.edu.ar y luego por el registro A de www.practica.redes.unlp.edu.ar. Observe los TTL de ambos. Repita la operación y compare el valor de los TTL de cada uno respecto de la respuesta anterior. ¿Puede explicar qué está ocurriendo? (Pista: observar los flags será de ayuda).
+
+### j. Consulte por el registro A de www.practica2.redes.unlp.edu.ar. ¿Obtuvo alguna respuesta? Investigue sobre los codigos de respuesta de DNS. ¿Para qué son utilizados los mensajes NXDOMAIN y NOERROR?
+
+### 12. Investigue los comando nslookup y host. ¿Para qué sirven? Intente con ambos comandos obtener:
+
+Nslookup es un programa utilizado para saber si el DNS está resolviendo correctamente los nombres y las IPs. Se utiliza con el comando `nslookup`, que funciona tanto en Windows como en UNIX para obtener la dirección IP conociendo el nombre, y viceversa. <br>
+El comando `host` se usa para encontrar la dirección IP del dominio dado y también muestra el nombre de dominio para la IP dada.
+
+### - Dirección IP de www.redes.unlp.edu.ar.
+
+<img src="img/tp3-ej12a.png">
+
+### - Servidores de correo del dominio redes.unlp.edu.ar.
+
+<img src="img/tp3-ej12b.png">
+
+### - Servidores de DNS del dominio redes.unlp.edu.ar.
+
+<img src="img/tp3-ej12c.png">
+
+### 13. ¿Qué función cumple en Linux/Unix el archivo /etc/hosts o en Windows el archivo \WINDOWS\system32\drivers\etc\hosts?
+
+El archivo hosts de un ordenador se usa por el sistema operativo para guardar la correspondencia entre dominios de Internet y direcciones IP. Este es uno de los diferentes métodos que usa el sistema operativo para resolver nombres de dominio. Antiguamente, cuando no había servidores DNS que resolvieran los dominios, el archivo hosts era el único encargado de hacerlo.
+
+### 14. Abra el programa Wireshark para comenzar a capturar el tráfico de red en la interfaz con IP 172.28.0.1. Una vez abierto realice una consulta DNS con el comando dig para averiguar el registro MX de redes.unlp.edu.ar y luego, otra para averiguar los registros NS correspondientes al dominio redes.unlp.edu.ar. Analice la información proporcionada por dig y compárelo con la captura.
