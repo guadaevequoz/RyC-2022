@@ -136,3 +136,62 @@ El comando `host` se usa para encontrar la dirección IP del dominio dado y tamb
 El archivo hosts de un ordenador se usa por el sistema operativo para guardar la correspondencia entre dominios de Internet y direcciones IP. Este es uno de los diferentes métodos que usa el sistema operativo para resolver nombres de dominio. Antiguamente, cuando no había servidores DNS que resolvieran los dominios, el archivo hosts era el único encargado de hacerlo.
 
 ### 14. Abra el programa Wireshark para comenzar a capturar el tráfico de red en la interfaz con IP 172.28.0.1. Una vez abierto realice una consulta DNS con el comando dig para averiguar el registro MX de redes.unlp.edu.ar y luego, otra para averiguar los registros NS correspondientes al dominio redes.unlp.edu.ar. Analice la información proporcionada por dig y compárelo con la captura.
+
+no entendi cómo hacerlo
+
+### 15. Dada la siguiente situación: “Una PC en una red determinada, con acceso a Internet, utiliza los servicios de DNS de un servidor de la red”. Analice:
+
+### a. ¿Qué tipo de consultas (iterativas o recursivas) realiza la PC a su servidor de DNS?
+
+La PC realiza consultas recursivas al servidor DNS, por lo cual este le responderá al resolver ya sea con la respuesta esperada o con un error. Si en cambio la consulta fuese iterativa, el servidor DNS responderá de la mejor manera posible para que el cliente pueda seguir buscando.
+
+### b. ¿Qué tipo de consultas (iterativas o recursivas) realiza el servidor de DNS para resolver requerimientos de usuario como el anterior? ¿A quién le realiza estas consultas?
+
+El servidor DNS que intenta resolver la consulta recursiva, realizará una serie de consultas iterativas a los distintos servidores DNS que sean necesarios hasta llegar al servidor DNS autoritativo para el dominio solicitado.
+
+### 16. Relacione DNS con HTTP. ¿Se puede navegar si no hay servicio de DNS?
+
+HTTP permite comunicar dos o más terminales para que compartan recursos. Para esto, los host deben identificarse de manera única y para eso se utilizan las IP. DNS permite mapear direcciones IP a partir de un nombre de dominio sin la necesidad que los usuarios se acuerdan las direcciones IP de todos los dominios. Por lo que, sin servicio DNS, la búsqueda sería mucho más dificil y tediosa, sin dejar de mencionar lo lento que sería tambien; todo esto es debido a que, como no se puede buscar por un nombre facilmente reconocible y que DNS se ocupe de toda la lógica, los usuarios deberian conocer el IP del host con el que se quieren conectar, los recursos se referenciarian mediante las IP y además las IP deberían ser estaticas.
+
+### 17. Observar el siguiente gráfico y contestar:
+
+<img src="img/tp3-ej17.png">
+
+### a. Si la PC-A, que usa como servidor de DNS a "DNS Server", desea obtener la IP de www.unlp.edu.ar, cuáles serían, y en qué orden, los pasos que se ejecutarán para obtener la respuesta.
+
+// consultar: los switch cuentan como comunicacion o solo son intermediarios?
+
+1. PC-A hace una consulta a DNS Server `192.168.10.2` por el dominio www.unlp.edu.ar
+2. DNS Server `192.168.10.2` hace una consulta a A.Root-Server
+3. A.Root-Server el responde a DNS Server `192.168.10.2` con los TDL de `.ar`
+4. DNS Server `192.168.10.2` consulta a a.dns.ar
+5. a.dns.ar le responde con el TDL de edu.ar
+6. DNS Server `192.168.10.2` hace una consulta a ns1.riu.edu.ar
+7. ns1.riu.edu.ar le responde con el dominio unlp.edu.ar
+8. DNS Server `192.168.10.2` hace una consulta a unlp.edu.ar
+9. unlp.edu.ar le responde con el IP de www.unlp.edu.ar
+10. DNS Server `192.168.10.2` le envia a PC-A el IP de www.unlp.edu.ar
+
+### b. ¿Dónde es recursiva la consulta? ¿Y dónde iterativa?
+
+De PC-A a DNS Server la consulta es recursiva, mientras que todas las consultas de DNS Server son iterativas.
+
+### 18. ¿A quién debería consultar para que la respuesta sobre www.google.com sea autoritativa?
+
+Para que la respuesta sea autoritativa hay que hacer la consulta a un servidor autoritativo del dominio `www.google.com`, dicho servidor podemos obtenerlo consultando por los registros NS.
+
+- Obtenemos el servidor:
+  <img src="img/tp3-ej18a.png">
+
+- Consultamos a ese servidor:
+  <img src="img/tp3-ej18b.png">
+
+### 19. ¿Qué sucede si al servidor elegido en el paso anterior se lo consulta por www.info.unlp.edu.ar? ¿Y si la consulta es al servidor 8.8.8.8?
+
+Si al servidor le consulto por `www.info.unlp.edu.ar` no obtengo respuesta ya que dicho servidor no tiene en sus registros el IP de la URL consultada.
+
+<img src="img/tp3-ej19a.png">
+
+En cambio, si le consulto al servidor `8.8.8.8` si obtengo respuesta.
+
+<img src="img/tp3-ej19b.png">
