@@ -61,7 +61,7 @@ La finalidad de transferencia de zona es mantener consistencia entre dos o mas s
 
 ### 10. Imagine que usted es el administrador del dominio de DNS de la UNLP (unlp.edu.ar). A su vez, cada facultad de la UNLP cuenta con un administrador que gestiona su propio dominio (por ejemplo, en el caso de la Facultad de Informática se trata de info.unlp.edu.ar). Suponga que se crea una nueva facultad, Facultad de Redes, cuyo dominio será redes.unlp.edu.ar, y el administrador le indica que quiere poder manejar su propio dominio. ¿Qué debe hacer usted para que el administrador de la Facultad de Redes pueda gestionar el dominio de forma independiente? (Pista: investigue en qué consiste la delegación de dominios).
 
-Para esto tengo que proporcionarle un servidor autoritativo ¿?
+Para esto hay que cambiar el servidor al que apunta a uno nuevo y si el mismo es autoritativo hay que gestionar los subdominios.
 
 ### 11. Responda y justifique los siguientes ejercicios
 
@@ -84,35 +84,90 @@ La dirección IP de resolver es: `172.28.0.29`.
 ### b. ¿Cuáles son los servidores de correo del dominio redes.unlp.edu.ar? ¿Por qué hay más de uno y qué significan los números que aparecen entre MX y el nombre? Si se quiere enviar un correo destinado a redes.unlp.edu.ar, ¿a qué servidor se le entregará? ¿En qué situación se le entregará al otro?
 
 <img src="img/tp3-ej1b.png">
-NO SÉ
+
+Los servidores de correo del dominio `redes.unlp.edu.ar` son: `mail.redes.unlp.edu.ar` y `mail2.redes.unlp.edu.ar`. Los numeros que aparecen entre MX y el nombre son los numeros de prioridad que se le darán. <br>
+Si se quiere enviar un correo destinado a `redes.unlp.edu.ar` se tratará de entregar a `mail.redes.unlp.edu.ar` ya que es el que mayor prioridad tiene, de no ser posible se entregará a `mail2.redes.unlp.edu.ar`.
 
 ### c. ¿Cuáles son los servidores de DNS del dominio redes.unlp.edu.ar?
 
+<img src="img/tp3-ej1c.png">
+
+Los servidores de DNS de `redes.unlp.edu.ar` son `ns-sv-a.redes.unlp.edu.ar` y `ns-sv-b.redes.unlp.edu.ar`
+
 ### d. Repita la consulta anterior cuatro veces más. ¿Qué observa? ¿Puede explicar a qué se debe?
+
+<img src="img/tp3-ej1d.png">
+
+Se puede observar que cambio:
+
+- La Id de la consulta, el cliente crea una Id para cada consulta y debido a esto cambia.
+- La cookie, las cookies están encriptadas para proteger los servidores DNS, por lo que es probable que el encriptado cambie en cada consulta.
+- El valor de When, esto indica la fecha y hora de la consulta asi que es logico que cambie debido a la diferencia de segundos entre consultas.
 
 ### e. Observe la información que obtuvo al consultar por los servidores de DNS del dominio. En base a la salida, ¿es posible indicar cuál de ellos es el primario?
 
+<img src="img/tp3-ej1e.png">
+
+Si se consulta por los cada uno de los servidores se puede observar que varía la IP de cada uno, sin embargo no sé si es información suficiente para saber si es primario o no.
+
 ### f. Consulte por el registro SOA del dominio y responda.
+
+<img src="img/tp3-ej1f.png">
 
 ### i. ¿Puede ahora determinar cuál es el servidor de DNS primario?
 
+Si, se puede determinar que el servidor primario es `ns-sv-b.redes.unlp.edu.ar`.
+
 ### ii. ¿Cuál es el número de serie, qué convención sigue y en qué casos es importante actualizarlo?
+
+El número de serie aumenta con cada actualización del archivo. Existen dos maneras de hacerlo. Por un lado, se empieza por 1 y se suma en uno cada vez que hay una actualizacion. Esta opción permite saber, a partir del número de serie, cuántos cambios ha habido. <br>
+
+La segunda opción es usar formato de fecha: AAAA-MM-DD-VV. Se empieza con un año, luego el mes y el día y por último un número de versión, todos de dos cifras menos el año. Este formato permite saber en qué fecha se creó la versión. Con cada cambio en un mismo día, el número de versión aumenta en una cifra. Al día siguiente cambia el número de serie y el número de versión vuelve a ponerse a 00.
+
+El número de serie es `2020031700`, por lo que podemos deducir que utiliza la convención de fecha y si lo desglosamos seria: 2020 - 03 - 17 - 00 --> 17 de marzo de 2020 versión 0.
 
 ### iii. ¿Qué valor tiene el segundo campo del registro? Investigue para qué se usa y como se interpreta el valor.
 
+El segundo campo del registro es TTL. El valor TTL actual de un registro determina cuánto tardará en aplicarse cualquier cambio que realices.
+
 ### iv. ¿Qué valor tiene el TTL de caché negativa y qué significa?
+
+El valor TTL de caché negativa es `86400` e indica durante cuánto tiempo el cliente puede guardar la información solicitada en la memoria caché antes de que sea necesario enviar una nueva solicitud.
 
 ### g. Indique qué valor tiene el registro TXT para el nombre saludo.redes.unlp.edu.ar. Investigue para qué es usado este registro.
 
+<img src="img/tp3-ej1g.png">
+
+El TXT permite que el administrador inserte notaciones en el server root.
+
 ### h. Utilizando dig, solicite la transferencia de zona de redes.unlp.edu.ar, analice la salida y responda.
+
+<img src="img/tp3-ej1h.png">
 
 ### i. ¿Qué significan los números que aparecen antes de la palabra IN? ¿Cuál es su finalidad?
 
+Los números que aparecen antes de la palabra IN es el TTL.
+
 ### ii. ¿Cuántos registros NS observa? Compare la respuesta con los servidores de DNS del dominio redes.unlp.edu.ar que dio anteriormente. ¿Puede explicar a qué se debe la diferencia y qué significa?
+
+Observo 4 registros NS. La diferencia con la consulta a NS ya hecha es que esos registros DNS son del subdominio `practica.redes.unlp.edu.ar`.
 
 ### i. Consulte por el registro A de www.redes.unlp.edu.ar y luego por el registro A de www.practica.redes.unlp.edu.ar. Observe los TTL de ambos. Repita la operación y compare el valor de los TTL de cada uno respecto de la respuesta anterior. ¿Puede explicar qué está ocurriendo? (Pista: observar los flags será de ayuda).
 
+<img src="img/tp3-ej1i.png">
+
+El TTL de `www.practica.redes.unlp.edu.ar` es menor.
+
+<img src="img/tp3-ej1i2.png">
+
+Si repito la operación el TLL de `www.practica.redes.unlp.edu.ar` disminuye, en cambio el TTL de `www.redes.unlp.edu.ar` se mantiene estable. Esto ocurre debido a que `www.redes.unlp.edu.ar` viene de un servidor autoritativo (flag `aa`) por lo que no debe actualizar su información.
+
 ### j. Consulte por el registro A de www.practica2.redes.unlp.edu.ar. ¿Obtuvo alguna respuesta? Investigue sobre los codigos de respuesta de DNS. ¿Para qué son utilizados los mensajes NXDOMAIN y NOERROR?
+
+<img src="img/tp3-ej1j.png">
+
+Se obtiene una respuesta con el estado `NXDOMAIN` lo cual significa que el registro no existe. <br>
+Por otro lado, el mensaje `NOERROR` indica que no hubo errores para realizar la consulta y que se obtuvo una respuesta válida.
 
 ### 12. Investigue los comando nslookup y host. ¿Para qué sirven? Intente con ambos comandos obtener:
 
@@ -137,7 +192,21 @@ El archivo hosts de un ordenador se usa por el sistema operativo para guardar la
 
 ### 14. Abra el programa Wireshark para comenzar a capturar el tráfico de red en la interfaz con IP 172.28.0.1. Una vez abierto realice una consulta DNS con el comando dig para averiguar el registro MX de redes.unlp.edu.ar y luego, otra para averiguar los registros NS correspondientes al dominio redes.unlp.edu.ar. Analice la información proporcionada por dig y compárelo con la captura.
 
-no entendi cómo hacerlo
+Al hacer la consulta MX en la captura se puede observar la siguiente información:
+
+<img src="img/tp3-ej14MXw.png">
+
+Y en el dig:
+
+<img src="img/tp3-ej14MXd.png">
+
+Al hacer la consulta NS en la captura se puede observar la siguiente información:
+
+<img src="img/tp3-ej14NSw.png">
+
+Y en el dig:
+
+<img src="img/tp3-ej14NSd.png">
 
 ### 15. Dada la siguiente situación: “Una PC en una red determinada, con acceso a Internet, utiliza los servicios de DNS de un servidor de la red”. Analice:
 
@@ -181,9 +250,11 @@ De PC-A a DNS Server la consulta es recursiva, mientras que todas las consultas 
 Para que la respuesta sea autoritativa hay que hacer la consulta a un servidor autoritativo del dominio `www.google.com`, dicho servidor podemos obtenerlo consultando por los registros NS.
 
 - Obtenemos el servidor:
-  <img src="img/tp3-ej18a.png">
+
+  <img src="img/tp3-ej18A.png">
 
 - Consultamos a ese servidor:
+
   <img src="img/tp3-ej18b.png">
 
 ### 19. ¿Qué sucede si al servidor elegido en el paso anterior se lo consulta por www.info.unlp.edu.ar? ¿Y si la consulta es al servidor 8.8.8.8?
