@@ -153,10 +153,35 @@ Es posible pero habría que redirigir los mensajes. (CONSULTAR MAÑANA)
 
 ### i. ¿A qué corresponde la información enviada por el servidor destino como respuesta al comando EHLO? Elija dos de las opciones del listado e investigue la funcionalidad de la misma.
 
+El comando `EHLO` sirve para abrir una sesión con el servidor. Se le agrega un argumento con el nombre del ordenador (debian). Si el servidor soporta ESMTP entonces devuelve una lista de los comandos que soporta esta extension, algunos son: (PERDON JOACKO ACÁ ME COPIE DE VOS PORQUE ME DIO PAJA BUSCAR)
+
+- `STARTTLS`: le indica al servidor que el cliente quiere iniciar una transferencia en modo seguro, a través del protocolo TLS. Si el servidor lo acepta, el protocolo va a volver a su estado inicial, por lo que el cliente va a tener que iniciar la sesión de nuevo con el comando HELO/EHLO.
+
+- `PIPELINING`: le indica al servidor que la conexión con el clienteva a realizarse en modo Pipelining. Esto significa que el cliente va a poder enviar varios mensajes seguidos al servidor sin esperar la respuesta de los anteriores.
+
 ### ii. Indicar cuáles cabeceras fueron agregadas por la herramienta swaks.
+
+- `Subject`: este lo añadimos en el comando para enviar el correo, con la opción `--h-Subject`.
+- `X-Mailer`: es usado para indicar qué herramienta se utilizó para enviar el correo. En este caso, lo agregó indicando que el mail se envió a través del comando swaks.
+- `Content-Type`: este se agregó porque adjuntamos un archivo, por lo que indica que que el mail es multipartes, con contenido variado; también define el divisor del MIME.
 
 ### iii. ¿Cuál es el message-id del correo enviado? ¿Quién asigna dicho valor?
 
+El Message-Id es: 20220918161844.006600@debian
+
 ### iv. ¿Cuál es el software utilizado como servidor de correo electrónico?
 
+El software utilizado es Postfix. Esto lo vemos en el apartado "by" del header Received de la fuente del mensaje recibido, en el que aparece el servidor que recibió el mail (mail.redes.unlp.edu.ar) y entre paréntesis el Software.
+
 ### v. Adjunte la salida del comando swaks y los fuentes del correo electrónico.
+
+_Salida del comando:_
+
+<img src="img/tp4-ej11-b.png">
+
+_Fuentes del correo:_
+<img src="img/tp4-ej11-b-fuente.png">
+
+### b. Descargue de la plataforma la captura de tráfico smtp.pcangylasalida del comando swaks smtp.swaks para responder y justificar los siguientes ejercicios.
+
+### i. ¿Por qué el contenido del mail no puede ser leido en la captura de tráfico?
