@@ -1,4 +1,4 @@
-## Práctica 2 - Capa de Aplicación - DNS
+## Práctica 3 - Capa de Aplicación - DNS
 
 ## DNS
 
