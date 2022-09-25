@@ -67,9 +67,11 @@ Si la cabecera general contiene un tipo de contenido Multipart/Mixed, significa 
 ### a. Utilizando Wireshark, capture el tráfico de red contra el servidor de correo mientras desde la cuenta alumnoimap@redes.unlp.edu.ar le envía una correo a alumnopop@redes.unlp.edu.ar y mientras alumnopop@redes.unlp.edu.ar recepciona dicho correo.
 
 _Envio_:
+
 <img src="img/tp4-ej4-a-envio.png">
 
 _Recepcion_:
+
 <img src="img/tp4-ej4-a-recepcion.png">
 
 ### b. Utilice el filtro POP para observar los paquetes del protocolo POP en la captura generada y analice el intercambio de dicho protocolo entre el cliente y el servidor para observar los distintos comandos utilizados y su correspondiente respuesta.
@@ -185,3 +187,41 @@ _Fuentes del correo:_
 ### b. Descargue de la plataforma la captura de tráfico smtp.pcangylasalida del comando swaks smtp.swaks para responder y justificar los siguientes ejercicios.
 
 ### i. ¿Por qué el contenido del mail no puede ser leido en la captura de tráfico?
+
+### 12. a. El servidor de mail, mail1, y de HTTP, www, de example.com tienen la misma IP, ¿es posible esto? Si lo es, ¿cómo lo resolvería?
+
+Si, es posible debido a que usan puertos diferentes más allá de su IP.
+
+### b. Al enviar el mail, ¿por qué registro de DNS consultará el MUA?
+
+Consultará por el registro MX, el cual es `smtp-5`.
+
+### c. Una vez que el mail fue recibido por el servidor smtp-5, ¿por qué registro de DNS consultará?
+
+Consultará al root server para obtener la IP de `.com`.
+
+### d. Si en el punto anterior smtp-5 recibiese un listado de nombres de servidores de correo, ¿será necesario realizar una consulta de DNS adicional? Si es afirmativo, ¿por qué tipo de registro y de cuál servidor preguntaría?
+
+Preguntaria por el que tiene más prioridad.
+
+### e. Indicar todo el proceso que deberá realizar el servidor ns1 de misitio.com.ar para obtener los servidores de mail de example.com
+
+- Primero ns1 consultará root usando A para obtener la IP de gtld (.com)
+- Al gtld le pregunta por el registro A para obtener la IP de example.com
+- Le pregunta a mail1 por el MX para poder enviarlo
+
+### f. Teniendo en cuenta el proceso de encapsulación/desencapsulación y definición de protocolos, responder V o F y justificar:
+
+- ?
+- Verdadero
+- Falso
+- Falso
+- Falso
+
+### g. Un cliente web que desea acceder al servidor www.example.com y que no pertenece a ninguno de estos dos dominios puede usar a ns1 de misitio.com.ar como servidor de DNS para resolver la consulta
+
+Falso.
+
+### h. Cuando Alicia quiera ver sus mails desde PC-D, ¿qué registro de DNS deberá consultarse?
+
+### i. Indicar todos los protocolos de mail involucrados, puerto y si usan TCP o UDP, en el envío y recepción de dicho mail

@@ -228,17 +228,15 @@ HTTP permite comunicar dos o más terminales para que compartan recursos. Para e
 
 ### a. Si la PC-A, que usa como servidor de DNS a "DNS Server", desea obtener la IP de www.unlp.edu.ar, cuáles serían, y en qué orden, los pasos que se ejecutarán para obtener la respuesta.
 
-// consultar: los switch cuentan como comunicacion o solo son intermediarios?
-
 1. PC-A hace una consulta a DNS Server `192.168.10.2` por el dominio www.unlp.edu.ar
-2. DNS Server `192.168.10.2` hace una consulta a A.Root-Server
-3. A.Root-Server el responde a DNS Server `192.168.10.2` con los TDL de `.ar`
-4. DNS Server `192.168.10.2` consulta a a.dns.ar
-5. a.dns.ar le responde con el TDL de edu.ar
+2. DNS Server `192.168.10.2` hace una consulta a A.Root-Server (el que este más cerca)
+3. A.Root-Server el responde a DNS Server `192.168.10.2` con los NS de `.ar` que es `a.dns.ar`
+4. DNS Server `192.168.10.2` consulta a `a.dns.ar`
+5. a.dns.ar le responde con el los NS de edu.ar
 6. DNS Server `192.168.10.2` hace una consulta a ns1.riu.edu.ar
-7. ns1.riu.edu.ar le responde con el dominio unlp.edu.ar
-8. DNS Server `192.168.10.2` hace una consulta a unlp.edu.ar
-9. unlp.edu.ar le responde con el IP de www.unlp.edu.ar
+7. ns1.riu.edu.ar le responde con los NS de unlp.edu.ar
+8. DNS Server `192.168.10.2` hace una consulta a unlp.edu.ar por los registros A
+9. unlp.edu.ar le responde con los registros A de unlp.edu.ar (que incluye el de www)
 10. DNS Server `192.168.10.2` le envia a PC-A el IP de www.unlp.edu.ar
 
 ### b. ¿Dónde es recursiva la consulta? ¿Y dónde iterativa?
