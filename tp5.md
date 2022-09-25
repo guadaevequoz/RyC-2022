@@ -138,3 +138,149 @@ d. `netstat -t -l -p UDP`
 
 <img src="img/tp5-ej9-f.png">
 <img src="img/tp5-ej9-f2.png">
+
+### 10. ¿Qué sucede si llega un segmento TCP con el flag SYN activo a un host que no tiene ningún proceso esperando en el puerto destino de dicho segmento (es decir, que dicho puerto no está en estado LISTEN)?
+
+Si un host recibe un paquete TCP SYN cuyo puerto de destino es, por ejemplo, el número 80, y el host no está aceptando conexiones en dicho puerto (es decir, no está ejecutando un servidor web en el puerto 80). Entonces, el host enviará al origen un segmento especial de reinicio. Este segmento TCP tiene el bit indicador `RST` puesto en 1. Por lo tanto, cuando un host envía un segmento de reinicio, le está diciendo al emisor “_No tengo un socket para ese segmento. Por favor, no reenvies el segmento._”
+
+### a. Utilice hping3 para enviar paquetes TCP al puerto destino 22 de la máquina virtual con el flag SYN activado.
+
+La consola no me reconocia `hping3` asi que entre como sudo y me funciono.
+
+`hping3 -p 22 -S localhost`: con `p` indico el puerto y con `S` indico que el flag SYN esta en 1.
+
+<img src="img/tp5-ej10-a.png">
+
+### b. Utilice hping3 para enviar paquetes TCP al puerto destino 40 de la máquina virtual con el flag SYN activado.
+
+`hping3 -p 40 -S localhost`
+
+<img src="img/tp5-ej10-b.png">
+
+### c. ¿Qué diferencias nota en las respuestas obtenidas en los dos casos anteriores? ¿Puede explicar a qué se debe? (Ayuda: utilice el comando ss visto anteriormente).
+
+La principal diferencia está en los frags de respuesta: el flag `SA` (conexión 22) y `RA` (conexión 40). <br>
+Esto se debe a que un flag SA quiere decir que corresponde con SYN/ACK, es decir, que la comunicación ha sido aceptada, o lo que es lo mismo, que el puerto está abierto. De lo contrario, si el valor es RA corresponde a RST/ACK o lo que es lo mismo, que la comunicación no se ha realizado correctamente porque el puerto está cerrado o filtrado.
+<br>
+Utilizando el comando `ss` podemos observar que hay un socket escuchando el puerto 22 pero no hay uno escuchando el 40.
+
+<img src="img/tp5-ej10-c.png">
+
+### 11. ¿Qué sucede si llega un datagrama UDP a un host que no tiene a ningún proceso esperando en el puerto destino de dicho datagrama (es decir, que dicho puerto no está en estado LISTEN)?
+
+Cuando un host recibe un paquete UDP en el que el número de puerto de destino no se corresponde con un socket UDP activo, el host envía un datagrama ICMP especial.
+
+### a. Utilice hping3 para enviar datagramas UDP al puerto destino 5353 de la máquina virtual.
+
+`hping3 -2 -p 5353 -S localhost`: con `-2` indico el modo UDP.
+
+<img src="img/tp5-ej11-a.png">
+
+### b. Utilice hping3 para enviar datagramas UDP al puerto destino 40 de la máquina virtual.
+
+`hping3 -2 -p 40 -S localhost`
+
+<img src="img/tp5-ej11-b.png">
+
+### c. ¿Qué diferencias nota en las respuestas obtenidas en los dos casos anteriores? ¿Puede explicar a qué se debe? (Ayuda: utilice el comando ss visto anteriormente).
+
+No puedo observar lo que devuelve el inciso `a` pero estimo que los datagramas se envian bien ya que hay un socket escuchando en el puerto 5353, no se recibe respuesta alguna debido a que UDP no manda segmentos ACK. En cambio como no hay socket escuchando en el puerto 40, se recibe el paquete ICMP.
+<br>
+Utilizando el comando `ss` podemos observar que hay un socket escuchando el puerto 5353 pero no hay uno escuchando el 40.
+
+<img src="img/tp5-ej11-c.png">
+
+### 12. Investigue los distintos tipos de estado que puede tener una conexión TCP.
+
+Los distintos estados que puede tener una conexión TCP son:
+
+- _LISTEN_: indica que se esta esperando por una solicitud TCP
+- _SYN-SENT_: este estado se torna cuando el lado del cliente envia una solicitud de conexión, representa el estado de esperar que se acepte la conexión.
+- _SYN-RECEIVED_: representa la espera de confirmación de una solicitud de conexión después de ambos host haber recibido y enviado una solicitud de conexión.
+- _ESTABLISHED_: representa una conexión abierta, el cliente TCP puede enviar y recibir segmentos TCP que contengan datos de carga útil (es decir, datos generados por la aplicación).
+- _FIN-WAIT-1_: el cliente quiere cerrar la conexión y envía un segmento con el bit FIN puesto en 1. En este estado, el cliente TCP queda a la espera de un segmento TCP procedente del servidor que contenga un mensaje de reconocimiento.
+- _FIN-WAIT-2_: el cliente espera a recibir otro segmento del servidor con el bit FIN puesto a 1, es decir, una solicitud de cerrar la conexión del lado del servidor
+- _CLOSE-WAIT_: representa esperar la respuesta de terminar la conexión del lado del cliente
+- _CLOSING_: esperar por el ACK de cerrar la conexión desde el servidor
+- _LAST-ACK_: esperar por el ACK de cerrar la conexión enviado al servidor
+- _TIME-WAIT_: esperar el tiempo suficiente para que el servidor pueda reenviar al cliente TCP el reconocimiento final en caso de que el paquete ACK se pierda.
+- _CLOSED_: no existe conexión.
+
+<img src="img/tp5-ej12.png">
+
+### 13. Use CORE para armar una topología como la siguiente, sobre la cual deberá realizar:
+
+### a. En ambos equipos inspeccionar el estado de las conexiones y mantener abiertas ambas ventanas con el comando corriendo para poder visualizar los cambios a medida que se realiza el ejercicio. Ayuda: watch-n1 ’ss-nat’.
+
+### b. EnServidor, utilice la herramienta ncat para levantar un servicio que escuche en el puerto 8001/TCP. Utilice la opcion-k para que el servicio sea persistente. Verifique el estado de las conexiones.
+
+### c. Desde CLIENTE1 conectarse a dicho servicio utilizando también la herramienta ncat. Inspeccione el estado de las conexiones.
+
+### d. Iniciar otra conexión desde CLIENTE1 de la misma manera que la anterior y verificar el estado de las conexiones. ¿De qué manera puede identificar cada conexión?
+
+### e. En base a lo observado en el item anterior, ¿es posible iniciar más de una conexión desde el cliente al servidor en el mismo puerto destino? ¿Por qué? ¿Cómo se garantiza que los datos de una conexión no se mezclarán con los de la otra?
+
+### Analice en el tráfico de red, los flags de los segmentos TCP que ocurren cuando:
+
+### i. Cierra la última conexión establecida desde CLIENTE1. Evalúe los estados de las conexiones en ambos equipos.
+
+### ii. Corta el servicio de ncat en el servidor (Ctrl+C). Evalúe los estados de las conexiones en ambos equipos.
+
+### iii. Cierra la conexión en el cliente. Evalúe nuevamente los estados de las conexiones.
+
+### 14. Dada la siguiente salida del comando ss, responda:
+
+<img src="img/tp5-ej14.png">
+
+### a. ¿Cuántas conexiones hay establecidas?
+
+Hay 9 conexiones con estado `ESTAB`. **Consultar: si la conexión es al mismo host local, cuenta como conexión?**
+
+### b. ¿Cuántos puertos hay abiertos a la espera de posibles nuevas conexiones?
+
+Hay `4` puertos abiertos, 22, 80, 53 y 25.
+
+### c. El cliente y el servidor de las comunicaciones HTTPS (puerto 443), ¿residen en la misma máquina?
+
+No, de ser así deberia haber algún socket en el puerto 443 y deberian coincidir las IPs.
+
+### d. El cliente y el servidor de la comunicación SSH (puerto 22), ¿residen en la misma máquina?
+
+**Consultar: cómo sé si el cliente y el servidor residen en la misma máquina?**
+Estimo que si pero no sé por qué xd
+
+### e. Liste los nombres de todos los procesos asociados con cada comunicación. Indique para cada uno si se trata de un proceso cliente o uno servidor.
+
+**Consultar: cómo sé si es cliente o servidor?**
+
+- `sshd`:
+- `apache2`:
+- `named`:
+- `x-www-browser`:
+- `postfix`:
+- `ssh`:
+
+### f. ¿Cuáles conexiones tuvieron el cierre iniciado por el host local y cuáles por el remoto?
+
+Las conexiónes con el estado `TIME-WAIT` tuvieron el cierre iniciado por el host local, mientras que las que tienen el estado `CLOSE-WAIT` lo tienen por el host remoto.
+
+### g. ¿Cuántas conexiones están aún pendientes por establecerse?
+
+Hay una sola, es la que tiene de estado `SYN-SENT`.
+
+### 15. Dadas las salidas de los siguientes comandos ejecutados en el cliente y el servidor, responder:
+
+<img src="img/tp5-ej15.png">
+
+### a. ¿Qué segmentos llegaron y cuáles se están perdiendo en la red?
+
+El segmento `SYN` enviado por el cliente llegó al servidor, pero el `SYNACK` del servidor no ha llegado al cliente.
+
+### b. ¿A qué protocolo de capa de aplicación y de transporte se está intentando conectar el cliente?
+
+El puerto `110` suele utilizarlo POP3.
+
+### c. ¿Qué flags tendría seteado el segmento perdido?
+
+- `SYN`: 1
+- `ACK`: 1
