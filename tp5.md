@@ -75,9 +75,66 @@ El objetivo de utilizar puertos en el modelo TCP/IP es diferenciar los distintos
 
 ### 5. La PDU de la capa de transporte es el segmento. Sin embargo, en algunos contextos suele utilizarse el término datagrama. Indique cuando.
 
-Se usa cuando pasa a la capa de red.
+Los paquetes de la capa de transporte se definen como _segmentos_. Sin embargo, en algunos RFC tambien se emplea la palabra _segmento_ haciendo referencia al PDU de TCP y _datagrama_ haciendo referencia al PDU de UDP; esto resulta un poco confuso ya que también se utiliza el termino _datagrama_ para hablar de los paquetes de la capa de red.
 
 ### 6. Describa el saludo de tres vías de TCP. ¿Se utiliza algo similar en UDP?
 
-_Explicar el saludo, creo que es el del SYN_
+El saludo de tres vías de TCP es la forma en la que se establece una conexión TCP. Suponga que hay
+un proceso en ejecución en un host (cliente) que desea iniciar una conexión con otro proceso que se ejecuta en otro host (servidor). El proceso de aplicación cliente informa en primer lugar al cliente TCP que desea establecer una conexión con un proceso del servidor. A continuación, el protocolo TCP en el cliente establece una conexión TCP con el protocolo TCP en el servidor de la siguiente manera: <br>
+
+1. TCP del lado del cliente envia un segmento espcial al TCP del lado del servidor. Este segmento no tendrá datos ni cabeceras llenas salvo por: el flag `SYN` puesto en 1 y un número se secuencia inicial aleatorio. Este segmento se encapsula dentro de un datagrama IP y se envía al servidor.
+2. Una vez que el datagrama IP llego al host servidor (suponiendo que llega), el servidor extrae dicho segmento SYN del datagrama, asigna los buffers y variables TCP a la conexión y envía un segmento de conexión _concedida_ al cliente. Este segmento de conexión concedida tampoco contiene datos de la capa de aplicación. Sin embargo, contiene tres fragmentos de información importantes de la cabecera del segmento: el bit `SYN` se pone a 1, el campo reconocimiento de la cabecera del segmento TCP se hace igual al `número de secuencia inicial del cliente + 1` y un número de secuencia inicial elegida por el servidor. Este segmento se lo conoce como **segmento SYNACK**.
+3. Al recibir el segmento SYNACK, el cliente asigna buffers y variables, y envía otro segmento al servidor. Este segmento será la confirmación de la conexión. El bit de `SYN` se pone en 0, ya que la conexión está establecida. Esta tercera etapa del proceso de acuerdo en tres fases puede transportar datos del cliente al servidor dentro de la carga útil del segmento.
+
+<br>
 En UDP no se utiliza ya que no establece una conexión entre procesos.
+
+### 7. Investigue qué es el ISN (Initial Sequence Number). Relaciónelo con el saludo de tres vías.
+
+El ISN es un número de secuencia único de 32 bits asignado durante el establecimiento de la conexión TCP.
+
+### 8. Investigue qué es el MSS. ¿Cuándo y cómo se negocia?
+
+La cantidad máxima de datos que pueden colocarse en un segmento está limitada por el _tamaño máximo de segmento_ (**MSS**, **_Maximum Segment Size_**). Normalmente, el MSS queda determinado en primer lugar por la longitud de la trama más larga de la capa de enlace que el host emisor local puede enviar (que es la _unidad máxima de transmisión_, (**MTU**, **_Maximum Transmission Unit_**), y luego el MSS se establece de manera que se garantice que un segmento TCP (cuando se encapsula en un datagrama IP) más la longitud de la cabecera TCP/IP (normalmente 40 bytes) se ajuste a una única trama de la capa de enlace. Los protocolos de la capa de enlace Ethernet y PPP tienen una MTU de 1.500 bytes. Un valor común de MTU es 1.460 bytes. También se han propuesto métodos para descubrir la MTU de la ruta y establecer el MSS basándose en el valor de la MTU de la ruta. Es importante mencionar que el MSS es la cantidad máxima de datos de la capa de aplicación en el segmento, no el tamaño máximo del segmento TCP incluyendo las cabeceras. <br>
+
+El MSS limita el tamaño máximo del campo de datos de un segmento. Cuando TCP envía un archivo grande, como por ejemplo una imagen como parte de una página web, normalmente divide el archivo en
+fragmentos de tamaño MSS (excepto el último fragmento, que normalmente será más pequeño que
+MSS). Sin embargo, las aplicaciones interactivas suelen transmitir fragmentos de datos que son más
+pequeños que el MSS; por ejemplo, en las aplicaciones de inicio de sesión remoto (remote login)
+como Telnet, el campo de datos del segmento TCP suele tener únicamente un byte. Puesto que habitualmente la cabecera de TCP tiene 20 bytes (12 bytes más que la cabecera de UDP), los segmentos enviados mediante Telnet solo pueden tener una longitud de 21 bytes.
+
+### 9. Utilice el comando ss (reemplazo de netstat) para obtener la siguiente información de su PC:
+
+### a. Para listar las comunicaciones TCP establecidas.
+
+`ss -t`
+
+### b. Para listar las comunicaciones UDP establecidas.
+
+`ss -u`
+
+<img src="img/tp5-ej9-ab.png">
+
+### c. Obtener sólo los servicios TCP que están esperando comunicaciones
+
+`ss -t -l`
+
+### d. Obtener sólo los servicios UDP que están esperando comunicaciones.
+
+`ss -u -l`
+
+<img src="img/tp5-ej9-cd.png">
+
+### e. Repetir los anteriores para visualizar el proceso del sistema asociado a la conexión.
+
+??? es usando `-p`?
+
+### f. Obtenga la misma información planteada en los items anteriores usando el comando netstat.
+
+a. `netstat -t -p TCP`
+b. `netstat -t -p UDP`
+c. `netstat -t -l -p TCP`
+d. `netstat -t -l -p UDP`
+
+<img src="img/tp5-ej9-f.png">
+<img src="img/tp5-ej9-f2.png">
