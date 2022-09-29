@@ -212,21 +212,39 @@ Los distintos estados que puede tener una conexión TCP son:
 
 ### a. En ambos equipos inspeccionar el estado de las conexiones y mantener abiertas ambas ventanas con el comando corriendo para poder visualizar los cambios a medida que se realiza el ejercicio. Ayuda: watch-n1 ’ss-nat’.
 
-### b. EnServidor, utilice la herramienta ncat para levantar un servicio que escuche en el puerto 8001/TCP. Utilice la opcion-k para que el servicio sea persistente. Verifique el estado de las conexiones.
+<img src="img/tp5-ej13-a.png">
+
+### b. EnServidor, utilice la herramienta ncat para levantar un servicio que escuche en el puerto 8001/TCP. Utilice la opcion -k para que el servicio sea persistente. Verifique el estado de las conexiones.
+
+<img src="img/tp5-ej13-b.png">
 
 ### c. Desde CLIENTE1 conectarse a dicho servicio utilizando también la herramienta ncat. Inspeccione el estado de las conexiones.
 
+<img src="img/tp5-ej13-c.png">
+
 ### d. Iniciar otra conexión desde CLIENTE1 de la misma manera que la anterior y verificar el estado de las conexiones. ¿De qué manera puede identificar cada conexión?
 
+Podemos identificar las conexiones porque en el cliente están en puertos distintos (una en el puerto 49396 y otra en el 44586).
+
+<img src="img/tp5-ej13-d.png">
+
 ### e. En base a lo observado en el item anterior, ¿es posible iniciar más de una conexión desde el cliente al servidor en el mismo puerto destino? ¿Por qué? ¿Cómo se garantiza que los datos de una conexión no se mezclarán con los de la otra?
+
+Es posible iniciar más de una conexión ya que desde el cliente las conexiones los puertos serán distintos, de esta manera no se mezclarán los datos de una conexión con los de la otra.
 
 ### Analice en el tráfico de red, los flags de los segmentos TCP que ocurren cuando:
 
 ### i. Cierra la última conexión establecida desde CLIENTE1. Evalúe los estados de las conexiones en ambos equipos.
 
+<img src="img/tp5-ej13-e-i.png">
+
 ### ii. Corta el servicio de ncat en el servidor (Ctrl+C). Evalúe los estados de las conexiones en ambos equipos.
 
+<img src="img/tp5-ej13-e-ii.png">
+
 ### iii. Cierra la conexión en el cliente. Evalúe nuevamente los estados de las conexiones.
+
+<img src="img/tp5-ej13-e-iii.png">
 
 ### 14. Dada la siguiente salida del comando ss, responda:
 
@@ -234,7 +252,7 @@ Los distintos estados que puede tener una conexión TCP son:
 
 ### a. ¿Cuántas conexiones hay establecidas?
 
-Hay 9 conexiones con estado `ESTAB`. **Consultar: si la conexión es al mismo host local, cuenta como conexión?**
+Hay 9 conexiones con estado `ESTAB`.
 
 ### b. ¿Cuántos puertos hay abiertos a la espera de posibles nuevas conexiones?
 
@@ -246,19 +264,21 @@ No, de ser así deberia haber algún socket en el puerto 443 y deberian coincidi
 
 ### d. El cliente y el servidor de la comunicación SSH (puerto 22), ¿residen en la misma máquina?
 
-**Consultar: cómo sé si el cliente y el servidor residen en la misma máquina?**
-Estimo que si pero no sé por qué xd
+Existen 2 comunicaciones relacionadas con el puerto 22, ambas tienen la misma dirección IP por lo tanto se puede decir que residen en la misma máquina.
 
 ### e. Liste los nombres de todos los procesos asociados con cada comunicación. Indique para cada uno si se trata de un proceso cliente o uno servidor.
 
-**Consultar: cómo sé si es cliente o servidor?**
+Para identificar si un proceso es cliente o servidor podemos tomar en cuenta dos cuestiones:
 
-- `sshd`:
-- `apache2`:
-- `named`:
-- `x-www-browser`:
-- `postfix`:
-- `ssh`:
+- Si el proceso está en estado LISTEN es muy probable que sea servidor.
+- Si el proceso tiene un puerto (del local address) muy alto es probable que sea cliente.
+
+* `sshd`: Servidor
+* `apache2`: Servidor
+* `named`: Servidor
+* `x-www-browser`: Cliente
+* `postfix`: Servidor
+* `ssh`: Cliente
 
 ### f. ¿Cuáles conexiones tuvieron el cierre iniciado por el host local y cuáles por el remoto?
 
