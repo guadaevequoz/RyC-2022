@@ -30,8 +30,13 @@ FTP tiene dos modos:
 
 ### 4. Suponiendo Selective Repeat; tamaño de ventana 4 y sabiendo que E indica que el mensaje llegó con errores. Indique en el siguiente gráfico, la numeración de los ACK que el host B envía al Host A.
 
+En Selective Repeat sólo los segmentos erroneos o perdidos serán retransmitidos, mientras que los correctos serán recibidos. El host receptor va a mantener el numero de secuencia mientras los bufferea a memoria y manda un NACK cuando el segmento esté perdido o dañado.
+
+En este caso la ventana inicial es de: `[0,1,2,3]`. Se envian sin problemas el 0 y el 1 por lo que se mueve la ventana a: `[2,3,4,5]`. El problema surge cuando se envia un NACK con el segmento 2, la ventana no se moverá hasta que el mismo no se retransmita.
+
 <img src="img/tp6-ej4-enunciado.png">
-# LO HAGO MAÑANA
+
+<img src="img/tp6-ej4-resuelto.png">
 
 ### 5. ¿Qué restricción existe sobre el tamaño de ventanas en el protocolo Selective Repeat?
 
@@ -64,3 +69,78 @@ _TSval_ y _TSecr_ contienen información de timestamp que es enviada de ida y vu
 TSval es un valor que se incluye en cada segmento para activar el timestamp y poder medir el RTT de cada paqiete. Este valor es repetido por el lado contrario de la conexión en el valor TSecr. Entonces, cuando el segmento está confirmado, el emisor de ese segmento puede simplemente substraer su actual timestamp del valor de TSecr para computar un buen calculo de RTT.
 <br>
 _Fuente_: `https://www.qacafe.com/resources/tcp-timestamp-option/`
+
+### 9. Para la captura dada, responder las siguientes preguntas:
+
+### a. ¿Cuántos intentos de conexiones TCP hay?
+
+Hay 6 intentos de conexión. Estos se identifican por tener el bit `SYN` en 1.
+
+### b. ¿Cuáles son la fuente y el destino (IP:port) para c/u?
+
+Para todos los intentos de conexión la fuente es la IP: `10.0.2.10` mientras que el destino es `10.0.4.10`.
+
+### c. ¿Cuántas conexiones TCP exitosas hay en la captura? ¿Cómo diferencia las exitosas de las que no lo son? ¿Cuáles flags encuentra en cada una?
+
+Hay 4 conexiones exitosas en la captura, estas se diferencian por obtener el flag de ACK en 1 del retorno del destino; las que fallaron no reciben este flag en 1.
+
+### d. Dada la primera conexión exitosa responder:
+
+### i. ¿Quién inicia la conexión?
+
+`10.0.2.10`.
+
+### ii. ¿Quién es el servidor y quién el cliente?
+
+El servidor es `10.0.4.10` y el cliente `10.0.2.10`.
+
+### iii. ¿En qué segmentos se ve el 3-way handshake?
+
+Se ve en los primeros 3 segmentos el 3-way handshake, esto es posible de observar gracias a los flags.
+
+<img src="img/tp6-ej9-c-iii.png">
+
+### iv. ¿Cuáles ISNs se intercambian?
+
+???
+
+### v. ¿Cuál MSS se negoció?
+
+`1460`?
+
+### vi. ¿Cuál de los dos hosts envia la mayor cantidad de datos (IP:port)?
+
+**Consultar: existe una forma de filtrar esto?**
+`10.0.2.10`.
+
+### e. Identificar primer segmento de datos (origen, destino, tiempo, número de fila y número de secuencia TCP).
+
+<img src="img/tp6-ej9-e.png">
+
+- Origen: `10.0.2.10`
+- Destino: `10.0.4.10`
+- Tiempo: `0.151826`.
+- Nro. de fila: `6`? #CONSULTAR
+- Nro. de secuencia: `1`.
+
+### i. ¿Cuántos datos lleva?
+
+Cuando abro el paquete la sección data me indica `24 bytes`. Sin embargo, todo el paquete pesa `90 bytes`.
+
+### ii. ¿Cuándo es confirmado (tiempo, número de fila y número de secuencia TCP)?
+
+- Tiempo: `0.151925`.
+- Nro. de fila: `7`? #CONSULTAR
+- Nro. de secuencia: `1`.
+
+### iii. La confirmación, ¿qué cantidad de bytes confirma?
+
+Confirma `25` bytes.
+
+### f. ¿Quién inicia el cierre de la conexión? ¿Qué flags se utilizan? ¿En cuáles segmentos se ve (tiempo, número de fila y número de secuencia TCP)?
+
+El cierre de conexión es iniciado por `10.0.2.10`. Utiliza los flags: `FIN`, `PSH` y `ACK`. Se observa en los 3 últimos segmentos:
+
+- Tiempo: `75.090`, `75.091` y `75.247`
+- Nro. de fila: `958`, `959` y `960`.
+- Nro. de secuencia: `786289`, `1` y `786458`.
