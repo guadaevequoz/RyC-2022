@@ -144,3 +144,196 @@ El cierre de conexión es iniciado por `10.0.2.10`. Utiliza los flags: `FIN`, `P
 - Tiempo: `75.090`, `75.091` y `75.247`
 - Nro. de fila: `958`, `959` y `960`.
 - Nro. de secuencia: `786289`, `1` y `786458`.
+
+### 10. Responda las siguientes preguntas respecto del mecanismo de control de flujo.
+
+### a. ¿Quién lo activa? ¿De qué forma lo hace?
+
+Lo activa el receptor, regulando la velocidad de envio del emisor. Permitiendole enviar sólo la cantidad de datos que quepan en el buffer.
+Esto lo hace utilizando una ventana de recepción, el emisor sólo podrá enviar la cantidad indicada por la ventana de recepción. En caso de que se llene el receptor, la ventana será 0.
+
+### b. ¿Qué problema resuelve?
+
+El control de flujo se usa para evitar que un emisor envíe datos de forma más rápida de la que el receptor puede recibirlos y procesarlos.
+
+### c. ¿Cuánto tiempo dura activo y qué situación lo desactiva?
+
+???
+
+### 11. Responda las siguientes preguntas respecto del mecanismo de control de congestión.
+
+### a. ¿Quién lo activa el mecanismo de control de congestión? ¿Cuáles son los posibles disparadores?
+
+Se activa si se determina que hay congestión de red, esto se asume si hay paquetes perdidos (la pérdida de paquetes se evalúa en función de los paquetes de reconocimiento recibidos y no recibidos), se modifica la ventana de congestión de forma que el emisor ralentice el envío de sus paquetes. Si se determina que no hay congestión se modificará la ventana de congestión de forma que el emisor pueda enviar más paquetes.
+
+### b. ¿Qué problema resuelve?
+
+La ventana introducida para control de congestión busca regular la cantidad de paquetes enviados en función de la percepción que tiene TCP de la congestión.
+
+### c. Diferencie slow start de congestion-avoidance.
+
+_Slow start_ es un algoritmo para el cálculo de la ventana de congestión aplicado al principio de la conexión, y hasta que se alcanza el umbral de congestión. Consiste en:
+
+- La ventana de congestión se inicia con el valor de un segmento de tamaño máximo (MSS).
+- Cada vez que se recibe un ACK, la ventana de congestión se incrementa en tantos bytes como hayan sido reconocidos en el ACK recibido. En la práctica, esto supone que el tamaño de la ventana de congestión será el doble por cada RTT, lo que da lugar a un crecimiento exponencial de la ventana.
+- Cuando un ACK no llega al transmisor:
+  - Se toma como una señal de congestión en la red y se reinicia la ventana de congestión a un MSS.
+  - Se aplica el algoritmo de _congestion avoidance_.
+
+_Congestion Avoidance_ se encarga de la violación que puede producirse cuando el tiempo de retransmisión es demasiado corto. Cada vez que se recibe un ACK la ventana de congestión se incrementa un número de bytes igual al MSS. En la práctica, esto supone que la ventana crece de manera lineal.
+
+### 12. Para la captura dada, responder las siguientes preguntas.
+
+### a. ¿Cuántas comunicaciones (srcIP,srcPort,dstIP,dstPort) UDP hay en la captura?
+
+Hay muchas, dentro de ellas:
+
+_Conexion 1:_
+
+- Source: `10.0.2.10`
+- Source port: `0`
+- Destination: `10.0.30.10`
+- Destination port: `8003`
+
+_Conexion 2:_ En esta conexión el destino y el origen se alternar (tanto IP como puertos).
+
+- Source: `10.0.2.10`
+- Source port: `9004`
+- Destination: `10.0.3.10`
+- Destination port: `9045`
+
+_Conexion 3:_
+
+- Source: `10.0.2.10`
+- Source port: `9004`
+- Destination: `1.1.1.1`
+- Destination port: `9045`
+
+_Conexion 4:_ En esta conexión el destino y el origen se alternar (tanto IP como puertos).
+
+- Source: `10.0.2.10`
+- Source port: `59053`
+- Destination: `10.0.4.10`
+- Destination port: `8003`
+
+### b. ¿Cómo se podrían identificar las exitosas de las que no lo son?
+
+Las puedo identificar visualmente porque algunos paquetes estan en color rojo, estimo que esas seran las erroneas.
+
+### c. ¿UDP sigue el modelo cliente/servidor?
+
+**CONSULTAR: NO ESTOY SEGURA**
+No, UDP no es orientado a cliente/servidor ya que no existe una conexion entre ambos, no hay handshaking.
+
+### d. ¿Qué servicios o aplicaciones suelen utilizar este protocolo?
+
+Las aplicaciones que usan UDP son:
+
+- Protocolo de Transferencia de Ficheros Trivial (TFTP)
+- Sistema de Nombres de Dominio (DNS) servidor de nombres
+- Llamada a Procedimiento Remoto (RPC), usado por el Sistema de Ficheros en Red (NFS)
+- Sistema de Computación de Redes (NCS)
+- Protocolo de Gestión Simple de Redes (SNMP)
+
+### e. ¿Qué hace el protocolo UDP en relación al control de errores?
+
+El protocolo UDP es un protocolo no orientado a la conexión, de manera que no proporciona ningún tipo de control de errores ni de flujo, aunque sí utiliza mecanismos de detección de errores. En caso de detectar un error, el UDP no entrega el datagrama a la aplicación, sino que lo descarta.
+
+### f. Con respecto a los puertos vistos en las capturas, ¿observa algo particular que lo diferencie de TCP?
+
+Si, UDP tiene muchos menos campos de información/headers que TCP. UDP parece ser mucho menor complejo en cuanto a TCP debido a eso.
+
+### g. Dada la primera comunicación en la cual se ven datos en ambos sentidos (identificar el primer datagrama):
+
+### i. ¿Quién envía el primer datagrama (srcIP,srcPort)?
+
+<img src="img/tp6-ej12-g.png">
+
+- Source: `10.0.2.10`
+- Source port: `9004`
+
+### ii. ¿Cuantos datos se envían en un sentido y en el otro?
+
+Desde `10.0.2.10` se envian 4 y luego 5 bytes.
+Desde `10.0.3.10` se envian 7 y luego 5 bytes.
+
+### h. ¿Se puede calcular un RTT?
+
+**CONSULTAR**
+
+## Programación de sockets
+
+### 13. Desarrolle un cliente y un servidor, donde el cliente envíe un mensaje al servidor y este último imprima en pantalla el contenido del mismo.
+
+### a. Utilizando UDP.
+
+_Cliente:_
+
+```py
+from socket import *
+
+serverName = ’hostname’
+serverPort = 12000
+clientSocket = socket(AF_INET, SOCK_DGRAM)
+message = raw_input(’Escriba una frase en minúsculas:’)
+clientSocket.sendto(message.encode(),(serverName, serverPort))
+modifiedMessage, serverAddress = clientSocket.recvfrom(2048)
+print(modifiedMessage.decode())
+clientSocket.close()
+```
+
+_Servidor:_
+
+```py
+from socket import *
+
+serverPort = 12000
+serverSocket = socket(AF_INET, SOCK_DGRAM)
+serverSocket.bind((’’, serverPort))
+print(”El servidor está listo para recibir”)
+while True:
+    message, clientAddress = serverSocket.recvfrom(2048)
+    modifiedMessage = message.decode().upper()
+    serverSocket.sendto(modifiedMessage.encode(), clientAddress)
+
+```
+
+### b. Utilizando TCP.
+
+_Cliente:_
+
+```py
+from socket import *
+
+serverName = ’servername’
+serverPort = 12000
+clientSocket = socket(AF_INET, SOCK_STREAM)
+clientSocket.connect((serverName,serverPort))
+entence = raw_input(’Escriba una frase en minúsculas:’)
+clientSocket.send(sentence.encode())
+modifiedSentence = clientSocket.recv(1024)
+print(’From Server: ’, modifiedSentence.decode())
+clientSocket.close()
+```
+
+_Servidor:_
+
+```py
+from socket import *
+
+serverPort = 12000
+serverSocket = socket(AF_INET,SOCK_STREAM)
+serverSocket.bind((’’,serverPort))
+serverSocket.listen(1)
+print(’El servidor está listo para recibir’)
+while True:
+    connectionSocket, addr = serverSocket.accept()
+    sentence = connectionSocket.recv(1024).decode()
+    capitalizedSentence = sentence.upper()
+    connectionSocket.send(capitalizedSentence.encode())
+    connectionSocket.close()
+```
+
+### 14. Compare ambas implementaciones. ¿Qué diferencia nota entre la implementación de cada una? ¿Cuál le parece más simple?
+
+UDP al ser un servicio no fiable, no orientado a la conexión, la implementación del ejercicio es mucho más simple.
