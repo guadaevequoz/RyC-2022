@@ -102,11 +102,11 @@ Se ve en los primeros 3 segmentos el 3-way handshake, esto es posible de observa
 
 ### iv. ¿Cuáles ISNs se intercambian?
 
-???
+`2218428254` del lado del cliente y `1292618479` del lado del servidor.
 
 ### v. ¿Cuál MSS se negoció?
 
-`1460`?
+`1460`
 
 ### vi. ¿Cuál de los dos hosts envia la mayor cantidad de datos (IP:port)?
 
@@ -120,7 +120,7 @@ Se ve en los primeros 3 segmentos el 3-way handshake, esto es posible de observa
 - Origen: `10.0.2.10`
 - Destino: `10.0.4.10`
 - Tiempo: `0.151826`.
-- Nro. de fila: `6`? #CONSULTAR
+- Nro. de fila: `6`
 - Nro. de secuencia: `1`.
 
 ### i. ¿Cuántos datos lleva?
@@ -222,8 +222,7 @@ Las puedo identificar visualmente porque algunos paquetes estan en color rojo, e
 
 ### c. ¿UDP sigue el modelo cliente/servidor?
 
-**CONSULTAR: NO ESTOY SEGURA**
-No, UDP no es orientado a cliente/servidor ya que no existe una conexion entre ambos, no hay handshaking.
+UDP se puede adaptar al modelo cliente/srrvidor como así tambien a otros. Sin embargo, TCP esta ligado sin discusion al mdoelo cliente/servidor debido a que si o si se establece una conexión.
 
 ### d. ¿Qué servicios o aplicaciones suelen utilizar este protocolo?
 
@@ -259,7 +258,7 @@ Desde `10.0.3.10` se envian 7 y luego 5 bytes.
 
 ### h. ¿Se puede calcular un RTT?
 
-**CONSULTAR**
+Es posible calcular el RTT sin embargo no es tan finito como en TCP. En UDP podemos verlo observando la seccion de Time pero esto incluye quizas tiempo de procesamiento y otras consideraciones que no nos otorgan un resultado finito.
 
 ## Programación de sockets
 
@@ -337,3 +336,7 @@ while True:
 ### 14. Compare ambas implementaciones. ¿Qué diferencia nota entre la implementación de cada una? ¿Cuál le parece más simple?
 
 UDP al ser un servicio no fiable, no orientado a la conexión, la implementación del ejercicio es mucho más simple.
+
+## Ejercicios de parcial (15 y 16)
+
+### (estos los dejo para practicar para el parcial 😋)
