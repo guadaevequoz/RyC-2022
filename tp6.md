@@ -110,7 +110,6 @@ Se ve en los primeros 3 segmentos el 3-way handshake, esto es posible de observa
 
 ### vi. ¿Cuál de los dos hosts envia la mayor cantidad de datos (IP:port)?
 
-**Consultar: existe una forma de filtrar esto?**
 `10.0.2.10`.
 
 ### e. Identificar primer segmento de datos (origen, destino, tiempo, número de fila y número de secuencia TCP).
@@ -130,7 +129,7 @@ Cuando abro el paquete la sección data me indica `24 bytes`. Sin embargo, todo 
 ### ii. ¿Cuándo es confirmado (tiempo, número de fila y número de secuencia TCP)?
 
 - Tiempo: `0.151925`.
-- Nro. de fila: `7`? #CONSULTAR
+- Nro. de fila: `7`
 - Nro. de secuencia: `1`.
 
 ### iii. La confirmación, ¿qué cantidad de bytes confirma?
