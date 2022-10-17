@@ -82,9 +82,23 @@ Pertenece a la clase B. La máscara de esta clase es: `255.255.0.0`.
 
 ### a. ¿Qué máscara utilizaría si necesita definir al menos 9 subredes?
 
+`11111111 11111111 11111111 11110000`, es decir, `255.255.255.240/28`
+
 ### b. Indique la dirección de subred de las primeras 9 subredes.
 
+1. 195.200.45.0
+2. 195.200.45.16
+3. 195.200.45.32
+4. 195.200.45.48
+5. 195.200.45.64
+6. 195.200.45.80
+7. 195.200.45.96
+8. 195.200.45.112
+9. 195.200.45.128
+
 ### c. Seleccione una e indique dirección de broadcast y rango de direcciones asignables en esa subred.
+
+La direccion de broadcast de la subred 9 es `195.200.45.143`. Su rango de direccines es: `195.200.45.129 - 195.200.45.142`.
 
 ### 9. Dado el siguiente gráfico:
 
@@ -92,9 +106,15 @@ Pertenece a la clase B. La máscara de esta clase es: `255.255.0.0`.
 
 ### a. Verifique si es correcta la asignación de direcciones IP y, en caso de no serlo, modifique la misma para que lo sea.
 
+???
+
 ### b. ¿Cuántos bits se tomaron para hacer subredes en la red 10.0.10.0/24? ¿Cuántas subredes se podrían generar?
 
+Como es una direccion IP de clase A, podemos decir que se tomaron 16 bits para hacer subredes. En total se pueden generar 2^16 = `65536` subredes.
+
 ### c. Para cada una de las redes utilizadas indique si son públicas o privadas.
+
+???
 
 ## CIDR
 
@@ -135,4 +155,78 @@ El bloque CIDR `0.0.0.0/1` equivale a todas las redes de la clase A.
 
 La técnica de VLSM (variable-length subnet masking) consiste en realizar divisiones en subredes con máscaras de longitud variable y es otra de las técnicas surgidas para frenar el agotamiento de direcciones IPv4. Básicamente, VLSM sugiere hacer varios niveles de división en redes para lograr máscaras más óptimas para cada una de las subredes que se necesiten.
 
+### 15. Describa, con sus palabras, el mecanismo para dividir subredes utilizando VLSM.
+
+- _Paso 1_: Subnetear para la red con mayor cantidad de hosts
+- _Paso 2_: De las subredes obtenidas, asignar todas las que se puedan con el menor desperdicio posible
+- _Paso 3_: Si aún quedan segmentos de red sin una subred asignada volver al paso 1.
+
+### 16. Suponga que trabaja en una organización que tiene la red que se ve en el gráfico y debe armar el direccionamiento para la misma, minimizando el desperdicio de direcciones IP. Dicha organización posee la red 205.10.192.0/19, que es la que usted deberá utilizar.
+
+<img src="img/tp7-ej16-enunciado.png">
+
+### a. ¿Es posible asignar las subredes correspondientes a la topología utilizando subnetting sin vlsm? Indique la cantidad de hosts que se desperdicia en cada subred.
+
+### b. Asigne direcciones a todas las redes de la topología. Tome siempre en cada paso la primer dirección de red posible.
+
+### c. Para mantener el orden y el inventario de direcciones disponibles, haga un listado de todas las direcciones libres que le quedaron, agrupándolas utilizando CIDR.
+
+### d. Asigne direcciones IP a todas las interfaces de la topología que sea posible.
+
+### 17. Utilizando la siguiente topología y el bloque asignado, arme el plan de direccionamiento IPv4 teniendo en cuenta las siguientes restricciones: _Utilizar el bloque IPv4 200.100.8.0/22_.
+
+### a. La red A tiene 125 hosts y se espera un crecimiento máximo de 20 hosts.
+
+### b. La red X tiene 63 hosts.
+
+### c. La red B cuenta con 60 hosts
+
+### d. La red Y tiene 46 hosts y se espera un crecimiento máximo de 18 hosts.
+
+### e. En cada red, se debe desperciciar la menor cantidad de direcciones IP posibles. En este sentido, las redes utilizadas para conectar los routers deberán utilizar segmentos de red /30 de modo de desperdiciar la menor cantidad posible de direcciones IP.
+
+### 18. Asigne direcciones IP en los equipos de la topología según el plan anterior.
+
 ## ICMP y Configuraciones IP
+
+### 19. Describa qué es y para qué sirve el protocolo ICMP
+
+Los hosts y los routers utilizan ICMP para intercambiarse información acerca de la capa de red. El uso más típico de ICMP es la generación de informes de error. Por ejemplo, al ejecutar una sesión Telnet, FTP o HTTP, puede encontrarse con un mensaje de error como “Red de destino inalcanzable”. Este mensaje tiene su origen en ICMP. En algún momento, un router IP no ha podido encontrar una ruta hasta el host especificado en su aplicación Telnet, FTP o HTTP, y dicho router ha creado y enviado un mensaje ICMP de tipo 3 a su host para informarle del error.
+
+ICMP a menudo se considera parte de IP pero, en sentido arquitectónico, se encuentra justo encima de IP, ya que los mensajes ICMP son transportados dentro de los datagramas IP. Es decir, los mensajes ICMP son transportados como carga útil de IP, al igual que los segmentos TCP o UDP son transportados como carga útil de IP. De forma similar, cuando un host recibe un datagrama IP con ICMP especificado como el protocolo de la capa superior, demultiplexa el contenido del datagrama para ICMP, al igual que demultiplexaría el contenido de un datagrama para TCP o UDP.
+
+Los mensajes ICMP tienen un campo de tipo y un campo de código, y contienen la cabecera y los 8 primeros bytes del datagrama IP que ha dado lugar a la generación del mensaje ICMP en primer lugar (de modo que el emisor puede determinar qué datagrama ha producido el error).
+
+### a. Analice cómo funciona el comando ping.
+
+Cuando ejecutamos una solicitud de `PING`, este envía un mensaje ICMP Echo Request al host de destino, y cuando el host de destino le responde, lo hace con un mensaje ICMP Echo Reply. A raíz de esa respuesta, se calcula el tiempo mínimo, medio y máximo de respuesta. En caso de no recibir respuesta en un tiempo predeterminado, nos llegará el mensaje de que no hay conexión con el host, la red es inalcanzable o que no se encuentra la ruta al host.
+
+### i. Indique el tipo y código ICMP que usa el ping.
+
+Ping envía un mensaje ICMP de `Echo Request`, de tipo 8 y con código 0.
+
+### ii. Indique el tipo y código ICMP que usa la respuesta de un ping
+
+El host responde con un mensaje ICMP `Echo Reply`, de tipo 0 y código 0.
+
+### b. Analice cómo funcionan comandos como traceroute/tracert de Linux/Windows y cómo manipulan el campo TTL de los paquetes IP.
+
+### c. Indique la cantidad de saltos realizados desde su computadora hasta el sitio www.nasa.gov. Analice:
+
+### i. Cómo hacer para que no muestre el nombre del dominio asociado a la IP de cada salta.
+
+### ii. La razón de la aparición de \* en parte o toda la respuesta de un salto.
+
+### d. Verifique el recorrido hacia los servidores de nombre del dominio unlp.edu.ar. En base al recorrido realizado, ¿podría confirmar cuál de ellos toma un camino distinto?
+
+### 20. ¿Para que se usa el bloque 127.0.0.0/8? ¿Qué PC responde a los siguientes comandos?
+
+### a. ping 127.0.0.1
+
+### b. ping 127.0.54.43
+
+### 21. Investigue para qué sirven los comandos ifconfig y route. ¿Qué comandos podría utilizar en su reemplazo? Inicie una topología con CORE, cree una máquina y utilice en ella los comandos anteriores para practicar sus diferentes opciones, mínimamente:
+
+### - Configurar y quitar una dirección IP en una interfaz.
+
+### - Ver la tabla de ruteo de la máquina.
