@@ -106,7 +106,8 @@ La direccion de broadcast de la subred 9 es `195.200.45.143`. Su rango de direcc
 
 ### a. Verifique si es correcta la asignación de direcciones IP y, en caso de no serlo, modifique la misma para que lo sea.
 
-???
+- La dirección IP `172.26.22.3` corresponde al broadcast de la subred. La dirección correcta sería la que representa a la red (172.26.22.0)
+- La dirección `172.17.10.17` está fuera del rango de la subred 172.17.10.0.
 
 ### b. ¿Cuántos bits se tomaron para hacer subredes en la red 10.0.10.0/24? ¿Cuántas subredes se podrían generar?
 
@@ -114,7 +115,16 @@ Como es una direccion IP de clase A, podemos decir que se tomaron 16 bits para h
 
 ### c. Para cada una de las redes utilizadas indique si son públicas o privadas.
 
-???
+| Publicas     | Privadas    |
+| ------------ | ----------- |
+| 191.26.145.0 | 10.0.10     |
+|              | 192.168.5.0 |
+|              | 172.17.10.0 |
+|              | 172.26.22.0 |
+
+- IPs privadas de Clase A: `10.0.0.0 – 10.255.255.255`
+- IPs privadas de Clase B: `172.16.0.0 – 172.31.255.255`
+- IPs privadas de Clase C: `192.168.0.0 – 192.168.255.255`
 
 ## CIDR
 
@@ -134,15 +144,23 @@ CIDR es útil ya que permite máscaras de subred de longitud variable (VLSM) par
 
 ### d. 198.10.2.0/24
 
-`198.10.0.0`. **CONSULTAR**
+Las redes se agrupan mediante CIDR a partir del bit que son diferentes, es decir, desde 198.10 son iguales pero a partir del punto que le sigue son diferentes. La mascara que se aplica para que todas den el mismo resultado es: `198.10.0.0/22`.
+
+`11000110 00001010 000000 01 00000000 - 198.10.1.0/24`
+`11000110 00001010 000000 00 00000000 - 198.10.0.0/24`
+`11000110 00001010 000000 10 00000000 - 198.10.2.0/24`
+`11000110 00001010 000000 11 00000000 - 198.10.3.0/24`
+Se puede observar que cambia a partir del bit 22, por lo que las podemos agrupar en una dirección con esa máscara.
+
+`11111111 11111111 111111 00 00000000 - 198.10.0.0/22`
 
 ### 12. Listar las redes involucradas en los siguientes bloques CIDR:
 
-- _200.56.168.0/21_:
-- _195.24.0.0/13_:
-- _195.24/13_:
+- _200.56.168.0/21_: `200.56.168.0/24 - 200.56.175.0/24`
+- _195.24.0.0/13_: `195.24.0.0/24 - 195.31.255.0/24`
+- _195.24/13_: `195.24.0.0/24 - 195.31.255.0/24`
 
-**CONSULTAR**
+La ultima es una trampa ya que cuadno tengo dos `0` seguidos en una direccion IP puedo obviarlos.
 
 ### 13. El bloque CIDR 128.0.0.0/2 o 128/2, ¿Equivale a listar todas las direcciones de red de clase B? ¿Cuál sería el bloque CIDR que agrupa todas las redes de clase A?
 
@@ -167,7 +185,31 @@ La técnica de VLSM (variable-length subnet masking) consiste en realizar divisi
 
 ### a. ¿Es posible asignar las subredes correspondientes a la topología utilizando subnetting sin vlsm? Indique la cantidad de hosts que se desperdicia en cada subred.
 
+Utilizando subnetting fijo necesito 5 redes (una por cada red y la que conecta los routers), 2^3-2=6 asi que necesito 3 bits.
+
+La mascara es:
+`11001101 00001010 11000000 00000000 - red normal`
+`11111111 11111111 11100000 00000000 - mascara de red`
+`11111111 11111111 111111 00 00000000 - mascara de subred`
+
+Me da 2^10-2=`1022` hosts. No me sirve porque necesito `1530`.
+
 ### b. Asigne direcciones a todas las redes de la topología. Tome siempre en cada paso la primer dirección de red posible.
+
+La red C tiene `1530` hosts por lo que necesito `11` bits para satisfacer la red.
+
+- `205.10.11000000.0/19`- red inicial
+- `205.10.110 00 000.0/21`- red C --> `205.10.192.0/21`
+
+La red A tiene `128` hosts así que necesito 8 bits. Subnetteo la red siguiente a la C: `205.10.110 01 000.0/21.`
+
+- `205.10.11001 000.0/24` - red A --> `205.10.200.0/24`
+
+La red B tiene `20` hosts asi que necesito 5 bits. Subnetteola red siguiente a A: `205.10.11001 001.0/24`
+`205.10.110010010. 000 00000/27` - red B --> `205.10.201.0/27`
+
+La red D tiene `7` hosts asi que con 4 bits me alcanza. Subnetteo la red siguiente a B: `205.10.110010010. 001 0 0000/27`
+`205.10.110010010. 001 0 0000/28` - red D --> `205.10.201.32/28`
 
 ### c. Para mantener el orden y el inventario de direcciones disponibles, haga un listado de todas las direcciones libres que le quedaron, agrupándolas utilizando CIDR.
 
