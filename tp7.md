@@ -207,7 +207,7 @@ La red C tiene `1530` hosts por lo que necesito `11` bits para satisfacer la red
 
 La red A tiene `128` hosts así que necesito 8 bits. Subnetteo la red siguiente a la C: `205.10.110 01 000.0/21.`
 
-- `205.10.11001 000.0/24` - red A --> `205.10.200.0/24`
+- `205.10.110 01 000.0/24` - red A --> `205.10.200.0/24`
 
 La red B tiene `20` hosts asi que necesito 5 bits. Subnetteola red siguiente a A: `205.10.11001 001.0/24`
 `205.10.110010010. 000 00000/27` - red B --> `205.10.201.0/27`
@@ -221,13 +221,38 @@ La red D tiene `7` hosts asi que con 4 bits me alcanza. Subnetteo la red siguien
 
 ### 17. Utilizando la siguiente topología y el bloque asignado, arme el plan de direccionamiento IPv4 teniendo en cuenta las siguientes restricciones: _Utilizar el bloque IPv4 200.100.8.0/22_.
 
+Es una red de clase C. Su mascara es:
+
+- _Red:_ `11001000 01100100 00001000 00000000`
+- _Mascara de red:_ `11111111 11111111 11111100 00000000 `
+- _Mascara de subred:_ `11001000 01100100 00001000 00000000 - 200.100.8.0/22`
+
 ### a. La red A tiene 125 hosts y se espera un crecimiento máximo de 20 hosts.
+
+Para 125 hosts necesito 8 bits (`2^8-2 = 254`).
+
+- _Mascara de red:_ `11111111 11111111 11111100 00000000 `
+- _Mascara de subred:_ `11001000 01100100 00001 000 00000000 - 200.100.8.0/24` - Red de 254 hosts
 
 ### b. La red X tiene 63 hosts.
 
+Para 63 hosts necesito 7 bits (`2^7-2 = 126`).
+
+- _Mascara de A:_ `11001000 01100100 00001 000 10000000 - 200.100.8.128/24`
+- _Mascara de subred:_ `11001000 01100100 00001 001 00000000 - 200.100.9.0/25` - Red de 126 hosts
+
 ### c. La red B cuenta con 60 hosts
 
+Para 60 hosts necesito 6 bits (`2^6-2 = 62`).
+
+- _Mascara de B:_ `11001000 01100100 00001 001 0 0000000 - 200.100.9.0/25`
+- _Mascara de subred:_ `11001000 01100100 00001001 10 000000 - 200.100.9.128/26` - Red de 62 hosts
+
 ### d. La red Y tiene 46 hosts y se espera un crecimiento máximo de 18 hosts.
+
+Para 64 hosts necesito 6 bits (`2^7-2 = 128`).
+
+**CONSULTAR: cómo hago?? utilizo otra??**
 
 ### e. En cada red, se debe desperciciar la menor cantidad de direcciones IP posibles. En este sentido, las redes utilizadas para conectar los routers deberán utilizar segmentos de red /30 de modo de desperdiciar la menor cantidad posible de direcciones IP.
 
@@ -257,7 +282,11 @@ El host responde con un mensaje ICMP `Echo Reply`, de tipo 0 y código 0.
 
 ### b. Analice cómo funcionan comandos como traceroute/tracert de Linux/Windows y cómo manipulan el campo TTL de los paquetes IP.
 
+`traceroute` y `tracert` son comandos de diagnóstico de red para mostrar posibles rutas (rutas) y medir los retrasos de tránsito de los paquetes a través de una red de IP. El historial de la ruta se registra como los tiempos de ida y vuelta de los paquetes recibidos de cada host sucesivo (nodo remoto) en la ruta (ruta); la suma de los tiempos medios en cada salto es una medida del tiempo total empleado para establecer la conexión. `Traceroute` procede a menos que todos (generalmente tres) paquetes enviados se pierdan más de dos veces; entonces se pierde la conexión y no se puede evaluar la ruta. `Ping`, por otro lado, solo calcula los tiempos finales de ida y vuelta desde el punto de destino.
+
 ### c. Indique la cantidad de saltos realizados desde su computadora hasta el sitio www.nasa.gov. Analice:
+
+**CONSULTAR: se usa ping?**
 
 ### i. Cómo hacer para que no muestre el nombre del dominio asociado a la IP de cada salta.
 
@@ -267,12 +296,39 @@ El host responde con un mensaje ICMP `Echo Reply`, de tipo 0 y código 0.
 
 ### 20. ¿Para que se usa el bloque 127.0.0.0/8? ¿Qué PC responde a los siguientes comandos?
 
+El dispositivo de red _loopback_ es una interfaz de red virtual. Las direcciones del rango `127.0.0.0/8` son direcciones de loopback, de las cuales se utiliza, de forma mayoritaria, la `127.0.0.1` por ser la primera de dicho rango. Las direcciones de loopback pueden ser redefinidas en los dispositivos, incluso con direcciones IP públicas, una práctica común en los routers. Esta dirección se suele utilizar cuando una transmisión de datos tiene como destino el propio host. También se suele usar en tareas de diagnóstico de conectividad y validez del protocolo de comunicación.
+
+A pesar de que sólo se usa la dirección única `127.0.0.1`, se reservan las direcciones desde la `127.0.0.0` hasta la `127.255.255.255`. Cualquier dirección dentro de este bloque producirá un loopback dentro del host local. Las direcciones dentro de este bloque no deben figurar en ninguna red.
+
 ### a. ping 127.0.0.1
+
+`Host local`
 
 ### b. ping 127.0.54.43
 
+`Host local`
+
 ### 21. Investigue para qué sirven los comandos ifconfig y route. ¿Qué comandos podría utilizar en su reemplazo? Inicie una topología con CORE, cree una máquina y utilice en ella los comandos anteriores para practicar sus diferentes opciones, mínimamente:
+
+El comando `Route` se utiliza para visualizar y modificar la tabla de rutas. `Route print` muestra una lista con las rutas actuales conocidas por IP para el host. `Route add` se utiliza para añadir rutas a la tabla, y route delete se utiliza para borrar rutas de la tabla.
+
+El comando `ifconfig` (configuración de interfaz) es una herramienta de gestión de red. Se utiliza para configurar y ver el estado de las interfaces de red en los sistemas operativos Linux. Con ifconfig, puede asignar direcciones IP, habilitar o deshabilitar interfaces, administrar la caché ARP, rutas y más.
+
+Actualmente los dos comandos mencionados anteriormente están obsoletos, en su reemplazo se utiliza el comando `ip`.
 
 ### - Configurar y quitar una dirección IP en una interfaz.
 
+_ifconfig_:
+
+- _Modificar_:`ifconfig ens33 192.168.1.1/24`
+- _Eliminar_: `ifconfig ens33 0.0.0.0`
+
+_route_:
+
+- _Modificar_: `DELETE <destino>`
+- _Eliminar_: `CHANGE <destino> <máscara> <gateway> Metric <métrica> if <interfaz>`
+
 ### - Ver la tabla de ruteo de la máquina.
+
+- `ifconfig`
+- `route print`
