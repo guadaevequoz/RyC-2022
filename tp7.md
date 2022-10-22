@@ -38,16 +38,16 @@ El _número de protocolo_ especificado en el datagrama IP desempeña un papel an
 | Red              | Clase | Dir. subred   | Max hosts | Dir broadcast | Rango |
 | ---------------- | ----- | ------------- | --------- | ------------- | ----- |
 | 172.16.58.223/26 | B     | 172.16.58.192 | 62        | 172.16.58.255 |       |
-| 163.10.5.49/27   | B     | 163.10.5.32   | 30        | 163.10.5.     |       |
-| 128.10.1.0/23    | B     | 128.10.0.0    | 510       |               |       |
+| 163.10.5.49/27   | B     | 163.10.5.32   | 30        | 163.10.5.63   |       |
+| 128.10.1.0/23    | B     | 128.10.0.0    | 510       | 128.10.1.255  |       |
 | 10.1.0.0/24      | A     | 10.1.0.0      | 254       | 10.1.0.255    |       |
-| 8.40.11.179/12   | A     | 8.32.0.0      | 1048574   |               |       |
+| 8.40.11.179/12   | A     | 8.32.0.0      | 1048574   | 8.47.255.255  |       |
 
 ### 7. Su organización cuenta con la dirección de red 128.50.10.0. Indique:
 
 ### a. ¿Es una dirección de red o de host?
 
-**CONSULTAR**
+Es una dirección de host, ya que la sección de hosts esta siendo utilizada.
 
 ### b. Clase a la que pertenece y máscara de clase.
 
@@ -77,8 +77,6 @@ Pertenece a la clase B. La máscara de esta clase es: `255.255.0.0`.
 2. Ubicar el número obtenido en la dirección IP ocupando la posición de los bits asignados a subred: `10000000 00110010 10110001 01000000` --> `128.50.177.64`
 
 ### 8. Si usted estuviese a cargo de la administración del bloque IP 195.200.45.0/24
-
-**CONSULTAR**
 
 ### a. ¿Qué máscara utilizaría si necesita definir al menos 9 subredes?
 
@@ -147,9 +145,13 @@ CIDR es útil ya que permite máscaras de subred de longitud variable (VLSM) par
 Las redes se agrupan mediante CIDR a partir del bit que son diferentes, es decir, desde 198.10 son iguales pero a partir del punto que le sigue son diferentes. La mascara que se aplica para que todas den el mismo resultado es: `198.10.0.0/22`.
 
 `11000110 00001010 000000 01 00000000 - 198.10.1.0/24`
+
 `11000110 00001010 000000 00 00000000 - 198.10.0.0/24`
+
 `11000110 00001010 000000 10 00000000 - 198.10.2.0/24`
+
 `11000110 00001010 000000 11 00000000 - 198.10.3.0/24`
+
 Se puede observar que cambia a partir del bit 22, por lo que las podemos agrupar en una dirección con esa máscara.
 
 `11111111 11111111 111111 00 00000000 - 198.10.0.0/22`
@@ -189,7 +191,9 @@ Utilizando subnetting fijo necesito 5 redes (una por cada red y la que conecta l
 
 La mascara es:
 `11001101 00001010 11000000 00000000 - red normal`
+
 `11111111 11111111 11100000 00000000 - mascara de red`
+
 `11111111 11111111 111111 00 00000000 - mascara de subred`
 
 Me da 2^10-2=`1022` hosts. No me sirve porque necesito `1530`.
