@@ -250,9 +250,10 @@ Para 60 hosts necesito 6 bits (`2^6-2 = 62`).
 
 ### d. La red Y tiene 46 hosts y se espera un crecimiento máximo de 18 hosts.
 
-Para 64 hosts necesito 6 bits (`2^7-2 = 128`).
+Para 64 hosts necesito 7 bits (`2^7-2 = 126`).
 
-**CONSULTAR: cómo hago?? utilizo otra??**
+- _Mascara:_ `11001000 01100100 00001 001 00000000 - 200.100.8.128/24`
+- _Mascara de subred:_ `11001000 01100100 00001010 00000000 - 200.100.10.0/25` - Red de 126 hosts
 
 ### e. En cada red, se debe desperciciar la menor cantidad de direcciones IP posibles. En este sentido, las redes utilizadas para conectar los routers deberán utilizar segmentos de red /30 de modo de desperdiciar la menor cantidad posible de direcciones IP.
 
@@ -286,7 +287,7 @@ El host responde con un mensaje ICMP `Echo Reply`, de tipo 0 y código 0.
 
 ### c. Indique la cantidad de saltos realizados desde su computadora hasta el sitio www.nasa.gov. Analice:
 
-**CONSULTAR: se usa ping?**
+**CONSULTAR: se usa ping? -- se usa traceroute pero me da paja**
 
 ### i. Cómo hacer para que no muestre el nombre del dominio asociado a la IP de cada salta.
 
