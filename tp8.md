@@ -68,3 +68,40 @@ Si, la tabla de ruteo es necesaria para poder comunicar los dispositivos de la r
 ### 6. Observando el siguiente gráfico y la tabla de ruteo del router D, responder:
 
 <img src="img/tp8-ej6-enunciado.png">
+
+### a. ¿Está correcta esa tabla de ruteo? En caso de no estarlo, indicar el o los errores encontrados. Escribir la tabla correctamente (no es necesario agregar las redes que conectan contra los ISPs)
+
+Los errores son:
+
+- _Next-Hop_ 10.0.0.5/30 --> esto es incorrecto ya que un hop nunca tiene un sufijo sino que es directamente una direccion IP.
+-
+
+## DHCP y NAT
+
+### 9. ¿Qué es NAT y para qué sirve? De un ejemplo de su uso y analice cómo funcionaría en ese entorno. Ayuda: analizar el servicio de Internet hogareño en el cual varios dispositivos usan Internet simultáneamente.
+
+Todo dispositivo IP necesita una dirección IP, por ende podría parecer que esto implica asignar un bloque de direcciones enorme, por lo tanto, el ISP debería asignar un rango de direcciones para cubrir todos los dispositivos. Pero ¿qué ocurre si el ISP ya ha asignado las porciones adyacentes al rango de direcciones actual de la red SOHO? ¿Y qué persona normal querría (o necesitaría) saber cómo gestionar las direcciones IP de la red de su casa? Afortunadamente, existe una forma más simple de asignar direcciones que ha encontrado un uso cada vez más amplio en escenarios de este tipo: la _traducción de direcciones de red_ (**NAT**).
+
+El router NAT no parece un router a ojos del mundo exterior. En su lugar, el router NAT se
+comporta de cara al exterior como un único dispositivo con una dirección IP única. En resumen, el router NAT oculta los detalles de la red doméstica al mundo exterior. Si todos los datagramas que llegan al router NAT procedentes de la WAN tienen la misma dirección IP de destino (específicamente, la de la interfaz WAN del router NAT), entonces ¿cómo sabe el router a qué host interno debería reenviar un datagrama dado? El truco consiste en utilizar una tabla de traducciones NAT almacenada en el router NAT, e incluir números de puerto junto
+con las direcciones IP en las entradas de la tabla.
+
+Suponga que un usuario de la red doméstica que utiliza el host con la dirección 10.0.0.1 solicita una página web almacenada en un servidor web (puerto 80) con la dirección IP 128.119.40.186. El host 10.0.0.1, asigna el número de puerto de origen (arbitrario) 3345 y envía el datagrama a la LAN. El router NAT recibe el datagrama, genera un nuevo número de puerto de origen, 5001, para el datagrama, sustituye la dirección IP de origen por su dirección IP de la red WAN 138.76.29.7, y sustituye el número de puerto de origen original 3345 por el nuevo número de puerto de origen 5001. Al generar un nuevo número de puerto de origen, el router NAT puede seleccionar cualquier número de puerto de origen que actualmente no se encuentre en la tabla de traducciones NAT. (Observe que, puesto que la longitud del campo número de puerto es de 16 bits, el protocolo NAT puede dar soporte a 60.000 conexiones simultáneas utilizando la única dirección IP WAN del router.) En el router, NAT también añade una entrada a su tabla de traducciones. El servidor web, que afortunadamente no es consciente de que el datagrama entrante que contiene la solicitud HTTP ha sido manipulado por el router NAT, responde con un datagrama cuya dirección de destino es la dirección IP del router NAT y cuto número de puerto de destino es 5001. Cuando este datagrama llega al router NAT, éste indexa la tabla de traducciones NAT utilizando la dirección IP de destino (138.76.29.7) y el número de puerto de destino (5001) para obtener la dirección IP (10.0.0.1) y el número de puerto de destino (3345) apropiados para el navegador de la red doméstica. A continuación, el router reescribe la dirección de destino y el número de puerto de destino del datagrama y lo reenvía a la red doméstica.
+
+### 10. ¿Qué especifica la RFC 1918 y cómo se relaciona con NAT?
+
+La **RFC 1918** define las direcciones IP privadas, es decir, aquellas que no se utilizan en Internet y que, por lo tanto, se pueden asignar a los host de una intranet situada detrás de un proxy.
+
+Las direcciones privadas son:
+
+- Clase A: `10.0.0.0` a `10.255.255.255` con una máscara `255.0.0.0`.
+
+- Clase B: `172.16.0.0` a `172.31.255.255` con una máscara `255.240.0.0`.
+
+- Clase C: `192.168.0.0` a `192.168.255.255` con una máscara `255.255.0.0`.
+
+Como las direcciones privadas solo tienen significado dentro de la red, NAT se encarga de direccionar los paquetes cuando se envían o se reciben de Internet.
+
+### 11. En la red de su casa o trabajo verifique la dirección IP de su computadora y luego acceda a www.cualesmiip.com. ¿Qué observa? ¿Puede explicar qué sucede?
+
+Para saber cuál es mi IP entre a `whatsmyip.org` y dice que es `xxx.xx.xx.xxx`. En la pagina del enunciado dice que es `xxxx:xxx:xxx:xxx:xxx:xxxx:xxxx:xxxx`. Creo que la IP de la página es IPv6 y la que yo vi es IPv4.
