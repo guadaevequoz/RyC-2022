@@ -74,9 +74,95 @@ Si, la tabla de ruteo es necesaria para poder comunicar los dispositivos de la r
 Los errores son:
 
 - _Next-Hop_ 10.0.0.5/30 --> esto es incorrecto ya que un hop nunca tiene un sufijo sino que es directamente una direccion IP.
--
+- _Red destino_ 205.10.128.0 --> esta mal porque no es una direccion de la red A
+- _Red destino_ 205.20.0.193 --> esta mal porque no es una direccion de la red E
+
+### b. Con la tabla de ruteo del punto anterior, Red D, ¿tiene salida a Internet? ¿Por qué? ¿Cómo lo solucionaría? Suponga que los demás routers están correctamente configurados, con salida a Internet y que Rtr-D debe salir a Internet por Rtr-C.
+
+Con la tabla de ruteo no hay salida a internet debido a que no hay un camino hacia la red de internet. Para solucionarlo habria que agregar una ruta default como Rtr-C como Next-Hop. **CONSULTAR**
+
+### c. Teniendo en cuenta lo aplicado en el punto anterior, si en Rtr-C estuviese la siguiente entrada en su tabla de ruteo qué sucedería si desde una PC en Red D se quiere acceder un servidor con IP 163.10.5.15
+
+Lo que sucederia es que el paquete quedaría en loop, Rtr-D lo enviaría a Rtr-C por su ruta default y Rtr-C se lo devolvería a Rtr-D por la entrada agregada en este punto. Quedaría en loop hasta que el TTL llegue a 0, momento en que se descarta el paquete y se envía un mensaje de error ICMP al origen.
+
+### d. ¿Es posible aplicar sumarización en esa tabla, la del router Rtr-D? ¿Por qué? ¿Qué debería suceder para poder aplicarla?
+
+La sumarización es unificar varias redes individuales en una sola entrada de ruteo.
+No es posible aplicar sumarización en la tabla del router D. Los casos posibkes podrían ser:
+
+- `10.0.0.4` y `10.0.0.0` pero no es posible porque tienen dirferente interfaz.
+- `205.20.0.128` y `205.20.0.192` pero no es posible ya que tienen diferente interfaz y tienen recorridos diferentes.
+
+### e. La sumarización aplicada en el punto anterior, ¿se podría aplicar en Rtr-B? ¿Por qué?
+
+No se podria aplicar en el router B ya que son redes directamente conectadas diferentes, con interfaces diferentes.
+
+### f. Escriba la tabla de ruteo de Rtr-B teniendo en cuenta lo siguiente:
+
+### \* Debe llegarse a todas las redes del gráfico
+
+### \* Debe salir a Internet por Rtr-A
+
+### \* Debe pasar por Rtr-D para llegar a Red D
+
+### \* Sumarizar si es posible
+
+| Red destino   | Mask | Next-Hop  | Intf |
+| ------------- | ---- | --------- | ---- |
+| 205.20.0.192  | /26  | -         | eth0 |
+| 205.20.0.128  | /26  | -         | eth2 |
+| 10.0.0.4      | /30  | -         | eth1 |
+| 10.0.0.12     | /30  | -         | eth3 |
+| 153.10.20.128 | /27  | 10.0.0.6  | eth1 |
+| 163.10.5.64   | /27  | 10.0.0.6  | eth1 |
+| 10.0.0.0      | /30  | 10.0.0.6  | eth1 |
+| 10.0.0.8      | /30  | 10.0.0.6  | eth1 |
+| 205.10.0.128  | /25  | 10.0.0.13 | eth3 |
+| 10.0.0.16     | /30  | 10.0.0.13 | eth3 |
+| 120.0.0.0     | /30  | 10.0.0.13 | eth3 |
+| 130.0.10.0    | /30  | 10.0.0.13 | eth3 |
+
+### g. Si Rtr-C pierde conectividad contra ISP-2, ¿es posible restablecer el acceso a Internet sin esperar a que vuelva la conectividad entre esos dispositivos?
+
+Si es posible, se puede reenviar todo el trafico al router A y que se reenvie por defencot al ISP-1.
+
+### 7. Evalúe para cada caso si el mensaje llegará a destino, saltos que tomará y tipo de respuesta recibida el emisor
+
+<img src="img/tp8-ej7-enunciado.png">
+
+**CONSULTAR**
+
+### \* Un mensaje ICMP enviado por PC-B a PC-C.
+
+No llega a destino ya que hace un loop entre _router 1_ y _router 2_.
+
+### \* Un mensaje ICMP enviado por PC-C a PC-B.
+
+Primero tomara el destino `0.0.0.0` hacia `10.0.2.1` por el `eth0`. Luego en el router 4 tomara el destino `10.0.0.0` hacia `10.0.1.1`por el `eth0`, esto se puede hacer por la mascara. Finalmente desde el router 2 va al destino `10.0.5.0` por la interfaz `eth2`.
+
+### \* Un mensaje ICMP enviado por PC-C a 8.8.8.8.
+
+Lo envia por el destino por default `0.0.0.0`.
+
+### \* Un mensaje ICMP enviado por PC-B a 8.8.8.8.
+
+Lo envia por el destino por default `0.0.0.0`.
 
 ## DHCP y NAT
+
+### 8. Con la máquina virtual con acceso a Internet realice las siguientes observaciones respecto de la autoconfiguración IP vía DHCP:
+
+### a. Inicie una captura de tráfico Wireshark utilizando el filtro bootp para visualizar únicamente tráfico de DHCP.
+
+### b. En una terminal de root, ejecute el comando sudo /sbin/dhclient eth0 y analice el intercambio de paquetes capturado.
+
+### c. Analice la información registrada en el archivo /var/lib/dhcp/dhclient.leases, ¿cuál parece su función?
+
+### d. Ejecute el siguiente comando para eliminar información temporal asignada por el servidor DHCP. rm /var/lib/dhcp/dhclient.leases
+
+### e. En una terminal de root, vuelva a ejecutar el comando sudo /sbin/dhclient eth0 y analice el intercambio de paquetes capturado nuevamente ¿a que se debió la diferencia con lo observado en el punto “b”?
+
+### f. Tanto en “b” como en “e”, ¿qué información es brindada al host que realiza la petición DHCP, además de la dirección IP que tiene que utilizar?
 
 ### 9. ¿Qué es NAT y para qué sirve? De un ejemplo de su uso y analice cómo funcionaría en ese entorno. Ayuda: analizar el servicio de Internet hogareño en el cual varios dispositivos usan Internet simultáneamente.
 
