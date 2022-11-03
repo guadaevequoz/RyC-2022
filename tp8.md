@@ -156,15 +156,46 @@ Lo envia por el destino por default `0.0.0.0`.
 
 ### a. Inicie una captura de tráfico Wireshark utilizando el filtro bootp para visualizar únicamente tráfico de DHCP.
 
+No me deja usar ese filtro asi que lo hice sin usarlo.
+
 ### b. En una terminal de root, ejecute el comando sudo /sbin/dhclient eth0 y analice el intercambio de paquetes capturado.
+
+No me dejaba ejecutar el comando, consultando resulta que es: `/sbin/dhclient enp0s3`. Si tira el error `RTNETLINK answers: File exists` hay que ejecutar `ifconfig enp0s3 0.0.0.0` y volver a ejecutar y funciona.
+
+<img src="img/tp8-ej8-b.png">
+
+En los paquetes se puede observar el protocolo ARP consultando por las IP.
+
+<img src="img/tp8-ej8-b2.png">
 
 ### c. Analice la información registrada en el archivo /var/lib/dhcp/dhclient.leases, ¿cuál parece su función?
 
+Se guardan los datos del servidor DHCP, es decir, es una base de datos persistente de todas las conexiones que son válidas. Si una conexión esta dos veces se toma el ultimo.
+
+<img src="img/tp8-ej8-c.png">
+
 ### d. Ejecute el siguiente comando para eliminar información temporal asignada por el servidor DHCP. rm /var/lib/dhcp/dhclient.leases
+
+`sudo rm /var/lib/dhcp/dhclient.leases`
 
 ### e. En una terminal de root, vuelva a ejecutar el comando sudo /sbin/dhclient eth0 y analice el intercambio de paquetes capturado nuevamente ¿a que se debió la diferencia con lo observado en el punto “b”?
 
+<img src="img/tp8-ej8-e.png">
+
+???
+
 ### f. Tanto en “b” como en “e”, ¿qué información es brindada al host que realiza la petición DHCP, además de la dirección IP que tiene que utilizar?
+
+Se le brinda:
+
+- Su dirección IP asignada
+- Cantidad de segundos, durante los cuales puede usar la IP
+- Cantidad de segundos, después de los cuales debería renovar la IP
+- Cantidad de segundos, después de los cuales deberá reiniciar el proceso de obtener otra IP, si no pudo renovar la IP actual anteriormente
+- Máscara de subred
+- Dirección IP de broadcast
+- Dirección IP del router
+- Dirección IP del DNS local
 
 ### 9. ¿Qué es NAT y para qué sirve? De un ejemplo de su uso y analice cómo funcionaría en ese entorno. Ayuda: analizar el servicio de Internet hogareño en el cual varios dispositivos usan Internet simultáneamente.
 
@@ -193,3 +224,32 @@ Como las direcciones privadas solo tienen significado dentro de la red, NAT se e
 ### 11. En la red de su casa o trabajo verifique la dirección IP de su computadora y luego acceda a www.cualesmiip.com. ¿Qué observa? ¿Puede explicar qué sucede?
 
 Para saber cuál es mi IP entre a `whatsmyip.org` y dice que es `xxx.xx.xx.xxx`. En la pagina del enunciado dice que es `xxxx:xxx:xxx:xxx:xxx:xxxx:xxxx:xxxx`. Creo que la IP de la página es IPv6 y la que yo vi es IPv4.
+
+### 12. Resuelva las consignas que se dan a continuación.
+
+### a. En base a la siguiente topología y a las tablas que se muestran, complete los datos que faltan.
+
+<img src="img/tp8-ej12-enunciado.png">
+
+1. `190.50.10.63:80`
+2. `192.168.1.2:37484`
+3. `51238`
+4. `190.50.10.81:8081`
+5. `190.50.10.81:8080`
+6. `205.20.0.29:16345`
+
+### b. En base a lo anterior, responda:
+
+### i. ¿Cuántas conexiones establecidas hay y entre qué dispositivos?
+
+Las conexiones son:
+
+- `192.168.1.2:49273` y `190.50.10.63:80`
+- `192.168.1.2:37484` y `190.50.10.63:25`
+- `192.168.1.2:51238` y `190.50.10.81:8080`
+- `192.168.1.3:52734` y `190.50.10.81:8081`
+- `192.168.1.3:39275`y `190.50.10.81:8080`
+
+### ii. ¿Quién inició cada una de las conexiones? ¿Podrían haberse iniciado en sentido inverso? ¿Por qué? Investigue qué es port forwarding y si serviría como solución en este caso.
+
+Las conexiones fueron iniciadas por los clientes hacia los servidores. No se puede iniciar en sentido inverso ya que las PCs tienen direcciones privadas y no se pueden acceder desde internet; para accederlas se debe usar algún mecanismo tipo port-forwarding en el router que tiene alguna IP pública. El _port forwarding_ permite a los ordenadores remotos conectarse a un ordenador o servicio específico dentro de una red de área local privada (LAN).
