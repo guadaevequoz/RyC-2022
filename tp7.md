@@ -229,31 +229,53 @@ Es una red de clase C. Su mascara es:
 
 ### a. La red A tiene 125 hosts y se espera un crecimiento máximo de 20 hosts.
 
-Para 125 hosts necesito 8 bits (`2^8-2 = 254`).
-
-- _Mascara de red:_ `11111111 11111111 11111100 00000000 `
-- _Mascara de subred:_ `11001000 01100100 00001 000 00000000 - 200.100.8.0/24` - Red de 254 hosts
-
 ### b. La red X tiene 63 hosts.
-
-Para 63 hosts necesito 7 bits (`2^7-2 = 126`).
-
-- _Mascara de A:_ `11001000 01100100 00001 000 10000000 - 200.100.8.128/24`
-- _Mascara de subred:_ `11001000 01100100 00001 001 00000000 - 200.100.9.0/25` - Red de 126 hosts
 
 ### c. La red B cuenta con 60 hosts
 
-Para 60 hosts necesito 6 bits (`2^6-2 = 62`).
-
-- _Mascara de B:_ `11001000 01100100 00001 001 0 0000000 - 200.100.9.0/25`
-- _Mascara de subred:_ `11001000 01100100 00001001 10 000000 - 200.100.9.128/26` - Red de 62 hosts
-
 ### d. La red Y tiene 46 hosts y se espera un crecimiento máximo de 18 hosts.
 
-Para 64 hosts necesito 7 bits (`2^7-2 = 126`).
+Para comenzar necesito saber cuantos hosts van a necesitar todas las redes y ordenarlas de mayor a menor: 145 (A), 64(Y), 63 (X) y 60 (B).
 
-- _Mascara:_ `11001000 01100100 00001 001 00000000 - 200.100.8.128/24`
-- _Mascara de subred:_ `11001000 01100100 00001010 00000000 - 200.100.10.0/25` - Red de 126 hosts
+- Para 145 hosts necesito 8 bits (`2^8-2 = 254`).
+
+* _Mascara de red:_ `11111111 11111111 11111100 00000000 `
+* _Mascara de subred:_ `11001000 01100100 000010 00 00000000 - 200.100.8.0/24` - Red de 254 hosts
+* _Redes libres /24:_
+* `11001000 01100100 000010 01 00000000`
+* `11001000 01100100 000010 10 00000000`
+* `11001000 01100100 000010 11 00000000`
+
+- Para 64 hosts necesito 7 bits (`2^7-2 = 126`).
+
+Tomo la segunda red que genero en el punto anterior: `11001000 01100100 000010 01 00000000`
+
+- _Mascara de subred:_ `11001000 01100100 000010 01 0 0000000 - 200.100.9.0/25` - Red de 126 hosts
+- _Redes libres /25:_
+- `11001000 01100100 000010 01 1 0000000`
+
+* Para 63 hosts necesito 7 bits (`2^7-2 = 126`).
+
+Tomo la segunda red que genero en el punto anterior: `11001000 01100100 000010 01 1 0000000`
+
+- _Mascara de subred:_ `11001000 01100100 000010 01 1 0000000 - 200.100.9.128/25` - Red de 126 hosts
+
+* Para 60 hosts necesito 6 bits (`2^6-2 = 62`).
+
+Como me quede sin redes disponibles /25 entonces tomo la siguiente red libre /24: `11001000 01100100 000010 10 00000000`
+
+- _Mascara de subred:_ `11001000 01100100 000010 10 00 000000 - 200.100.10.0/26` - Red de 62 hosts
+- _Redes libres /26:_
+- `11001000 01100100 000010 10 01 000000`
+- `11001000 01100100 000010 10 10 000000`
+- `11001000 01100100 000010 10 11 000000`
+
+Entonces las redes sería:
+
+- Red A: `200.100.8.0/24`
+- Red B: `200.100.10.0/26`
+- Red X: `200.100.9.128/25`
+- Red Y: `200.100.9.0/25`
 
 ### e. En cada red, se debe desperciciar la menor cantidad de direcciones IP posibles. En este sentido, las redes utilizadas para conectar los routers deberán utilizar segmentos de red /30 de modo de desperdiciar la menor cantidad posible de direcciones IP.
 

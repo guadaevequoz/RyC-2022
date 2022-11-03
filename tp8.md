@@ -16,11 +16,13 @@ Debido a que R1 tiene un MTU de 600B se debe fragmentar el paquete IP saliente d
 
 ### c. Indicar cómo quedarían las paquetes fragmentados para ser enviados por el enlace entre R1 y R2.
 
-1. Tamaño total: `520`, Identificacion: `20543`, DF: `0`, MF: `1`, Fragment offset: `0`
+Para fragmentar hay que tomar el valor máximo del MTU (600) y restarle el valor del header (580), luego hay que encontrar el multiplo de 8 más cercano a ese numero.
 
-2. Tamaño total: `520`, Identificacion: `20543`, DF: `0`, MF: `1`, Fragment offset: `65`
+1. Tamaño total: `576`, Identificacion: `20543`, DF: `0`, MF: `1`, Fragment offset: `0`
 
-3. Tamaño total: `472`, Identificacion: `20543`, DF: `0`, MF: `1`, Fragment offset: `130`
+2. Tamaño total: `576`, Identificacion: `20543`, DF: `0`, MF: `1`, Fragment offset: `72`
+
+3. Tamaño total: `352`, Identificacion: `20543`, DF: `0`, MF: `1`, Fragment offset: `144`
 
 ### d. ¿Dónde se unen nuevamente los fragmentos? ¿Qué sucede si un fragmento no llega?
 
