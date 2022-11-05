@@ -54,4 +54,98 @@ Por razones de seguridad, las cabeceras ICMPv6 pueden ser autenticadas y encript
 ### 7. Transforme las siguientes direcciones MACs en Identificadores de Interfaces de 64 bits.
 
 - _00:1b:77:b1:49:a1_:
+
+**Procedimiento:**
+
+1. Tomo el primer octeto del hexa y lo paso a binario: `00` --> `0000 0000`.
+2. Invertir el septimo bit: `0000 0000` --> `0000 0010`
+3. Convertir de binario a decimal: `0000 0010` --> `2`
+4. Reemplazar el primer octeto con el decimal: `00:1b:77:b1:49:a1` --> `2:1b:77:b1:49:a1`
+5. Agregar _ff:fe_ a la mitad de la direccion: `2:1b:77:b1:49:a1` --> `2:1b:77: ff:fe: b1:49:a1`
+6. Agregar _fe80::_ al comienzo: `2:1b:77: ff:fe: b1:49:a1` --> `fe80::2:1b:77:ff:fe:b1:49:a1`
+7. La ordeno: `fe80::2:1b:77:ff:fe:b1:49:a1` --> `fe80::21b:77ff:feb1:49a1`
+
+El resultado es: `fe80::21b:77ff:feb1:49a1`
+
 - _e8:1c:23:a3:21:f4_:
+
+1. Tomo el primer octeto del hexa y lo paso a binario: `e8` --> `1110 1000`.
+2. Invertir el septimo bit: `1110 1000` --> `1110 1010`
+3. Convertir de binario a decimal: `1110 1010` --> `234`
+4. Reemplazar el primer octeto con el decimal: `e8:1c:23:a3:21:f4` --> `234:1c:23:a3:21:f4`
+5. Agregar _ff:fe_ a la mitad de la direccion: `234:1c:23:a3:21:f4` --> `234:1c:23: ff:fe: a3:21:f4`
+6. Agregar _fe80::_ al comienzo: `234:1c:23: ff:fe: a3:21:f4` --> `fe80::234:1c:23:ff:fe:a3:21:f4`
+7. La ordeno y paso el 234 a hexa: `fe80::ea:1c:23:ff:fe:a3:21:f4` --> `fe80::ea1c:23ff:fea3:21f4`
+
+El resultado es: `fe80::ea1c:23ff:fea3:21f4`
+
+### 8. ¿Cuál de las siguientes direcciones IPv6 no son válidas?
+
+- _2001:0:1019:afde::1_: Es válida. La direccion original es: `2001:0:1019:afde:0:0:0:1`.
+- _2001::1871::4_: No es válida ya que la abreviatura `::` puede repetirse una sola vez en una dirección.
+- _3ffg:8712:0:1:0000:aede:aaaa:1211_: Es válida.
+- _3::1_: Es válida. La direccion original es: `3:0:0:0:0:0:0:1`.
+- _::_: Es válida (creo que es una por default).
+- _2001::_: Es válida. La direccion original es: `2001:0:0:0:0:0:0:0`.
+- _3ffe:1080:1212:56ed:75da:43ff:fe90:affe_: Es válida.
+- _3ffe:1080:1212:56ed:75da:43ff:fe90:affe:1001_: No es válida ya que contiene un grupo de 16 bits demás.
+
+### 9. ¿Cuál sería una abreviatura correcta de 3f80:0000:0000:0a00:0000:0000:0000:0845?
+
+Las abreviatura correcta es: `3f80:0:0:a00::845`.
+
+### 10. Indique si las siguientes direcciones son de link-local, global-address, multicast, etc.
+
+Las _link-local_ tienen 10 bits de red, 54 bits 0 y 64 bits de IID. El prefijo asignado es `FE80::/10` y el utilizado es `FE80::/64`.
+Las _site-local_ tienen 10 bits de red, 54 bits de site Id y 64 bits de IID. El prefijo `FEC0::/10`. Similar a las redes privadas de IPv4.
+Las _unique-local_ tienen 48 bits de unique Id, 16 bits de site Id y 64 bits de IID. El prefijo asignado es `FC00::/7` y el utilizado es `FD00::/8`. Reemplazan las direcciones de Site Local.
+Las _global-address_ tienen 48 bits de provideer, 16 bits de site Id y 64 bits de host. El prefijo asignado es cedido por un provider. Es de alcance de internet.
+Las _multicast-address_ tienen 16 bits de configuracion (flags y scope) y 112 bits de group ID. El prefijo `FF00::/8`.
+
+- _fe80::1/64_: `link-local`
+- _3ffe:4543:2:100:4398::1/64_: ?
+- _::_: `anycast`?
+- _::1_: `anycast`?
+- _ff02::2_:`multicast`
+- _2818:edbc:43e1::8721:122_: `global-address`?
+- _ff02::9_:`multicast`
+
+### 11. Dado el siguiente diagrama, ¿qué direcciones IPv6 será capaz de autoconfigurar el nodo A en cada una de sus interfaces?
+
+<img src="img/tp9-ej11-enunciado.png">
+
+???
+
+### 12. Al autogenerarse una dirección IPv6 sus últimos 64 bits en muchas ocasiones no se deducen de la dirección MAC, se generan de forma random, ¿por qué sucede esto? ¿Qué es lo que se intenta evitar? (Ver direcciones temporarias, RFC 8981)
+
+???
+
+### 13. Utilizando la máquina virtual abrir la topología llamada 3-ruteo-OSPF.imn para realizar las siguientes pruebas:
+
+### a. Habilitar la vista de las direcciones IPv6 en la topología (View ->show ->IPv6 Addresses).
+
+### b. Esperar a que la red converja. Verificar, mediante ping6, la comunicación entre n6 y n7.
+
+### c. Observar la configuración IPv6:
+
+### i. De la PC n6.
+
+### ii. De la PC n7.
+
+### iii. Del router n1.
+
+### iv. La tabla de rutas tanto de las PCs como de los routers.
+
+### d. Responda:
+
+### i. ¿Cuántas direcciones IPv6 se observan tanto en la PC n6 como en la PC n7?
+
+### ii. ¿Es posible desde la PC n7 hacer un ping6 a cada una de las direcciones IPv6 de la PC n6 ¿Por qué?
+
+### e. Cuando se quiere hacer ping6 a una dirección link-local es necesario especificar la interfaz que se quiere utilizar (ping6 -I eth0 <IPv6-address>) ¿Por qué?
+
+### f. Deshabilite la configuración de IPv6 en la PC n7 mediante el comando: sysctl -w net.ipv6.conf.all.disable_ipv6=1
+
+### i. Verifique las IPs configuradas en la PC.
+
+### ii. Luego de deshabilitarse IPv6, ¿puede comunicarse con la PC n6? ¿Cómo?
