@@ -83,7 +83,7 @@ El resultado es: `fe80::ea1c:23ff:fea3:21f4`
 
 - _2001:0:1019:afde::1_: Es válida. La direccion original es: `2001:0:1019:afde:0:0:0:1`.
 - _2001::1871::4_: No es válida ya que la abreviatura `::` puede repetirse una sola vez en una dirección.
-- _3ffg:8712:0:1:0000:aede:aaaa:1211_: Es válida.
+- _3ffg:8712:0:1:0000:aede:aaaa:1211_: No es válida ya que `g` no pertenece a los valores hexadecimales.
 - _3::1_: Es válida. La direccion original es: `3:0:0:0:0:0:0:1`.
 - _::_: Es válida (creo que es una por default).
 - _2001::_: Es válida. La direccion original es: `2001:0:0:0:0:0:0:0`.
@@ -103,11 +103,11 @@ Las _global-address_ tienen 48 bits de provideer, 16 bits de site Id y 64 bits d
 Las _multicast-address_ tienen 16 bits de configuracion (flags y scope) y 112 bits de group ID. El prefijo `FF00::/8`.
 
 - _fe80::1/64_: `link-local`
-- _3ffe:4543:2:100:4398::1/64_: ?
-- _::_: `anycast`?
-- _::1_: `anycast`?
+- _3ffe:4543:2:100:4398::1/64_: `global-address`
+- _::_: `anycast`
+- _::1_: `anycast`
 - _ff02::2_:`multicast`
-- _2818:edbc:43e1::8721:122_: `global-address`?
+- _2818:edbc:43e1::8721:122_: `global-address`
 - _ff02::9_:`multicast`
 
 ### 11. Dado el siguiente diagrama, ¿qué direcciones IPv6 será capaz de autoconfigurar el nodo A en cada una de sus interfaces?
