@@ -114,7 +114,8 @@ Las _multicast-address_ tienen 16 bits de configuracion (flags y scope) y 112 bi
 
 <img src="img/tp9-ej11-enunciado.png">
 
-???
+- Primero genera `fe80::21b:77ff:feb1:49a1` (link-local)
+- Luego genera `fe80::c225:eeff:feba:93e1` (link-local)
 
 ### 12. Al autogenerarse una dirección IPv6 sus últimos 64 bits en muchas ocasiones no se deducen de la dirección MAC, se generan de forma random, ¿por qué sucede esto? ¿Qué es lo que se intenta evitar? (Ver direcciones temporarias, RFC 8981)
 
@@ -122,9 +123,15 @@ Una dirección temporal IPv6 emplea un número de 64 bits generado aleatoriament
 
 ### 13. Utilizando la máquina virtual abrir la topología llamada 3-ruteo-OSPF.imn para realizar las siguientes pruebas:
 
+Para realizar el ejercicio tuve que copiar el código que esta en el LINTI y pasarlo a un archivo y guardarlo con la extensión `.imn`.
+
 ### a. Habilitar la vista de las direcciones IPv6 en la topología (View ->show ->IPv6 Addresses).
 
+?? no me muestra nada
+
 ### b. Esperar a que la red converja. Verificar, mediante ping6, la comunicación entre n6 y n7.
+
+?? no me deja comunicarme
 
 ### c. Observar la configuración IPv6:
 
