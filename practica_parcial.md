@@ -105,15 +105,15 @@ c. pc-B hubiera escuchado cuando pc-A pedia la IP de pc-C.
 
 ## TP2 - EJ DE PARCIAL
 
-a. HTTP 1.1
+a. HTTP 1.1 (Debido al _Connection: close_ y el host del request).
 
 b. Utiliza el método HEAD, dicho método no retorna el recurso completo de hecho lo excluye de la respuesta.
 
-c. Se solicita el header de www.redes.unlp.edu.ar
+c. Se solicita el header de www.redes.unlp.edu.ar ❌ ESTA MAL, la rta correcta es: solicita el recurso /metodos/.
 
 d. Si, funcionó correctamente ya que devolvió un 200 OK.
 
-e. La respuesta hubiera sido un 304 Not modified, esto es debido a que la comparacion es menor estricta.
+e. La respuesta hubiera sido un 304 Not modified, esto es debido a que la comparacion es menor estricta. El navegador cargará la información cargada en caché.
 
 ## TP3 - EJ DE PARCIAL
 
@@ -125,6 +125,6 @@ a.
 
 b. No es una respuesta autoritativa (no tiene el flag aa). Le preguntaría a un servidor cualquiera de los que se enlistan en la AUTHORITY SECTION.
 
-c. Tanto la consulta como la respuesta fueron recursivas (flags qr y rd).
+c. Tanto la consulta como la respuesta fueron recursivas (flags ra y rd).
 
 d. Los valores 10 y 5 en las líneas 7 y 8 representan la prioridad de los servidores de correo, en caso de que se quiera acceder se va a acceder al de mayor prioridad (valor menor), si este no podria aceptar la solicitud se accederia al siguiente respestando la prioridad.
