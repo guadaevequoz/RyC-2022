@@ -17,7 +17,7 @@ Una respuesta autoritativa sucede cuando una consulta DNS es respondida por el s
 
 ### 4. ¿Qué diferencia una consulta DNS recursiva de una iterativa?
 
-Una consulta recursiva es aquella que envia a un mismo servidor una consulta hasta que la respuesta sea, en efecto, la dirección IP del host que consulto (cuando la obtiene no consulta más). Una consulta recursiva es aquella que puede consultar con varios servidores DNS y recibir respuestas que, quizás, no tengan la dirección IP que requeria, sino que un camino para llegar a ella a traves de los servidores DNS de ella.
+Una consulta recursiva es aquella que envia a un mismo servidor una consulta hasta que la respuesta sea, en efecto, la dirección IP del host que consulto (cuando la obtiene no consulta más). Una consulta iterativa es aquella que puede consultar con varios servidores DNS y recibir respuestas que, quizás, no tengan la dirección IP que requeria, sino que un camino para llegar a ella a traves de los servidores DNS de ella.
 
 ### 5. ¿Qué es el resolver?
 

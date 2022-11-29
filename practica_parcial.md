@@ -128,3 +128,31 @@ b. No es una respuesta autoritativa (no tiene el flag aa). Le preguntaría a un 
 c. Tanto la consulta como la respuesta fueron recursivas (flags ra y rd).
 
 d. Los valores 10 y 5 en las líneas 7 y 8 representan la prioridad de los servidores de correo, en caso de que se quiera acceder se va a acceder al de mayor prioridad (valor menor), si este no podria aceptar la solicitud se accederia al siguiente respestando la prioridad.
+
+## TP4 - EJ Ejercicio integrador HTTP, DNS y MAIL (10)
+
+a. Para hacer visible el dominio a Internet hay que registrar todos los servidores del dominio.
+
+b. Creemos que los registros son 1 por cada servidor DNS.
+
+| Nombre del registro | Tipo de registro | Prioridad | TTL | Valor del registro |
+| ------------------- | ---------------- | --------- | --- | ------------------ |
+| ns1                 | NS               | ?         | ?   | ?                  |
+| ns2                 | NS               | ?         | ?   | ?                  |
+
+c. Es necesario que el servidor DNS acepte consultas recursivas para permitir que los dispositivos en la red del servidor puedan comunicarse entre ellos pasandose información.
+
+d y e.
+
+- ns1: DNS - Puerto UDP 53
+- ns2: DNS - Puerto UDP 53
+- mail: SMTP - Puerto TCP 25 y IMAP (porque es mejor que POP3) - Puerto 143 **necesita IMAP??**
+- correo (WEB): HTTP - Puerto TCP 80 e IMAP
+
+f. El webmail utilizaria el protocolo SMTP para conectarse con el servidor de correo.
+
+g. En un registro TXT hay que agregar una configuración SPF en la que se incluyan los servidores de correo deseados. Creo que no afectaria a los mails enviados desde el Webmail porque debe existir una manera de configurar la dirección IP de salida.
+
+h. El MIME (Multipurpose Internet Mail Extensions) son una serie de convenciones o especificaciones dirigidas al intercambio a través de Internet de todo tipo de archivos de forma transparente para el usuario.
+
+**Nos da paja hacer el i, j, k, l y m**
