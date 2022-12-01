@@ -101,6 +101,77 @@ c. pc-B hubiera escuchado cuando pc-A pedia la IP de pc-C.
 
 <hr />
 
+## Parcial 2da fecha primer semestre 2022
+
+### 1.
+
+a. a.riu.edu.ar deberia poner como servidor SOA y NS y como CNAME al servidor web-prin.
+
+b. ns1 y ns-res tendrán un intercambio DNS cuando un cliente haga consultas recursivas a ns-res y ns-red hará las consultas iterativas correspondientes para llegar a ns1 (primero consulta a NS .edu.ar).
+
+c. Porque pasar el archivo entero sería muy pesado por lo que el emisor lo codifica a un texto más liviano y le deja la tarea de decodificarlo al receptor.
+
+d.
+GET /index.html HTTP/1.1
+Host: wp1.redes.edu.ar
+Connection: close / keep-alive
+User-agente: browser
+
+e. En caso de que el servidor establezca la conexión primero si podrian intercambiar datos.
+
+### 2.
+
+a. Llego el segmento SYN de parte del cliente y no llego el SYNACK del servidor al cliente.
+
+b. Se esta intentando conectar al protocolo POP3 de la capa de aplicacion a traves de TCP en la capa de transporte.
+
+c.
+
+- a. 190.0.0.1.110 > 190.0.11.1.35794 : Flags [SA], seq 1, ack 920152 + 1
+- b. 127.0.0.1.110 > 127.0.0.1.12345: Flags [SA], seq 1, ack 110012 + 1
+- c. _NO HAY RESPUESTA, SOLO DEVOLVERIA SI EL PUERTO ESTA OCUPADO_
+
+### 3.
+
+<img src="img/parcial2-ej3.png">
+
+### 4.
+
+180.96.0.0/11
+
+10101010 01100000 00000000 00000000
+11111111 11111111 00000000 00000000 MASCARA DE RED B
+11111111 11100000 00000000 00000000 MASCARA DE SUBRED
+
+10101010 01111111 00000000 00000000 Ultima dirección de red --> 180.127.0.0/11
+
+### 5.
+
+**Usamos subnetting fijo**
+
+206.58. 110 00000.0/19 --> Si tengo que hacer redes que alojen 700 hosts necesito 10 bits
+
+- 206.58. 110 000 00.00000000/22 --> Red 1 --> 206.58.192.0/22 (voy a tener 2^3 subredes)
+- 206.58. 110 001 00.00000000/22 --> Red 2 --> 206.58.193.0/22
+- 206.58. 110 010 00.00000000/22 --> Red 3 --> 206.58.194.0/22
+
+### 6.
+
+a. De pc-A va a ir al router 1 por eth0, del router 1 va a ir a pc-B por eth0.
+
+b. De pc-A va a ir al router 1 por eth0, del router 1 va a ir al ruter 3 por eth0 y del router 3 va a ir a www por eth2.
+
+c.
+
+| Dispositivo | Interfaz | IP          | Mask | Gateway    |
+| ----------- | -------- | ----------- | ---- | ---------- |
+| PC-A        | e1       | 10.3.0.66   | /22  | 10.0.144.1 |
+| PC-B        | e4       | 10.0.144.53 | /22  | 0          |
+
+**no sabemos si se agrega el router o no**
+
+d. **no sé**
+
 ## Ejercicios de las practicas
 
 ## TP2 - EJ DE PARCIAL
@@ -156,3 +227,40 @@ g. En un registro TXT hay que agregar una configuración SPF en la que se incluy
 h. El MIME (Multipurpose Internet Mail Extensions) son una serie de convenciones o especificaciones dirigidas al intercambio a través de Internet de todo tipo de archivos de forma transparente para el usuario.
 
 **Nos da paja hacer el i, j, k, l y m**
+
+## TP6 - EJ 15 y 16
+
+### 15.
+
+1.
+
+- Responde un paquete ICMP --> PORT UNREACHABLE
+
+- Responde con flag RA
+
+- Responde con flag SA
+
+- Responde con flag RA
+
+2. Hay 4 conexiones establecidas (EN EL LISTADO APARECEN 5 ESTAB PERO SON 4 PORQUE HAY UNA CONEXIÓN LOCAL: de ruby a mysqld y viceversa).
+
+### 16.
+
+<img src="img/tp6-ej16.png">
+
+## TP10 - EJ 12
+
+a. Se da cuenta porque aplica su máscara de red en su propia IP y en la IP destino y obtiene distinto resultado.
+
+b. Necesita la dirección _default gateway_.
+
+c.
+
+    Trama Ethernet: (mac origen: *MAC PC-A* mac destino: *MAC del router*)
+    Solicitud ARP: (mac origen: *MAC PC-A* ip origen: *IP PC-A*)
+                   (mac destino: *0* ip destino: *IP default gateway*)
+
+d.
+
+    Trama Ethernet: (mac origen: *MAC PC-A* mac destino: *MAC del router*)
+    Solicitud ARP: (ip origen: *IP PC-A* ip destino: *IP default gateway*)
