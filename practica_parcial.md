@@ -172,6 +172,126 @@ c.
 
 d. **no sé**
 
+## Parcial 3era fecha primer semestre 2022
+
+### 1.
+
+a. Deberia configurar el registro A de ns1 que apunta a web-prin: `203.0.113.229`. Quedando: (wp1.redes.edu.ar A 203.0.113.229)
+
+b. Se capturó la versión HTTP 1.1, esta versión permite conexiones persistentes y pipelining (se pueden solicitar recursos sin haber obtenido una confirmación del anterior).
+
+c. Utilizaria el protocolo SMTP para la transferencia de los correos en la red y el protocolo POP3 para la recepción y manejo de correos.
+
+(mail-1.redes.edu.ar A 203.0.113.227)
+(redes.edu.ar MX 5 mail-1.redes.edu.ar)
+
+(mail-2.redes.edu.ar A 198.51.100.133)
+(redes.edu.ar MX 10 mail-2.redes.edu.ar)
+
+d. El problema puede ser que tanto PC-D quieren una conexión activa con el servidor y como PC-E ya la tiene pudo haberle asignado un puerto que quizás es el mismo que quiere conectarse PC-D. La solución que se me ocurre es pedir una conexión pasiva desde PC-D o activa pero en otro puerto.
+
+### 2.
+
+a. El host esta indicando con `win=0` que no tiene más espacio para recibir datos.
+
+b. El host Z podría establecer una conexión ya que esta iniciandola desde un puerto local nuevo, que no está en uso.
+
+c. No se toma ningúna acción ya que UDP es _best-effort_ y no garantiza la recepción de los mensajes.
+
+### 3.
+
+a.
+
+- Protocolo: TCP
+- Direccion origen y puerto: 192.168.8.253:16367
+- Direccion destino y puerto: 192.168.8.15:9999
+- Flags: SYN
+- Numero de seq: 3230256110
+- ACK: 0
+
+b.
+
+- Protocolo: TCP
+- Direccion origen y puerto: 127.0.0.1:9050
+- Direccion destino y puerto: 127.0.0.1:1918
+- Flags: SYN/ACK
+- Numero de seq: 0
+- ACK: 1
+
+c.
+
+- Protocolo: UDP
+- Direccion origen 192.168.8.253
+- Direccion destino: 192.168.8.15
+- Puerto: 9
+- Flags: _no corresponde_
+- Numero de seq: _no corresponde_
+- ACK: _no corresponde_
+
+### 4.
+
+a. 48 clientes (creo que es por la cantidad de puertos del switch pero no estoy segura)
+
+b. `192.168.12.128/25` hay que asignarla a A (18), B (13) y C (15).
+
+- Comienzo por el cliente con más hosts que es el A. Necesito 5 bits, en total serán 2^5 - 2 = 30 hosts:
+
+`192.168.12.100 00000` --> La red entonces será: `192.168.12.128/27`
+`192.168.12.10100000` a `192.168.12.11100000` estarán libres, en total 2^2 subredes siendo que una ya esta utilizada.
+
+- Sigo con el cliente C. Necesito 5 bits, en total serán 2^5 - 2 = 30 hosts. Tomo la primer red libre que sobro del subnetting anterior: `192.168.12.10100000` --> `192.168.12.160/27`
+
+- Finalmente, el cliente B es el que menos hosts precisa: con 4 bits me alcanza, en total serán 2^4 - 2 = 14 hosts.
+
+Tomo la segunda red libre que sobro del subnetting anterior: `192.168.12.1100 0000` --> `192.168.12.192/28`
+
+c. Si, se puede. El CIDR sería:
+
+- `192.168.12.1 0000000`
+- `192.168.12.1 0100000`
+- `192.168.12.1 1000000`
+- `192.168.12.1 1100000`
+
+El bloque CIDR sería: `192.168.12.128/25`
+
+### 5.
+
+a.
+
+- pc-b envia un `echo request` a 10.0.7.20/24
+- el mensaje llega al router 2 donde evalua en su tabla de ruteo si está la dirección de pc-c haciendo un AND con las mascaras y como ninguna coincide sigue por el default-gateway (0.0.0.0)
+- del router2 el mensaje llega al router1 por la interfaz eth0; el router1 busca una coincidencia en su tabla de routeo y la encuentra con el destino `10.0.0.0` cuya mascara es `/16`, toma el gateway que le corresponde --> direccion del router3
+- en el router3 encuentra una coincidencia en la interfaz eth2 y envia el mensaje
+
+b.
+
+- pc-c envia un `echo request` a 10.0.5.20/24
+- el mensaje llega al router3 y no lo encuentra, asi que lo manda por el default gateway al router 4 por el eth0
+- el mensaje llega al router4 y coincide con el destino `10.0.0.0` cuya mascara es `/18`
+- el mensaje llega al router2 y como tiene una coincidencia con la ip de pc-b le manda el mensaje por la interfaz eth2
+
+c.
+
+- pc-c al router3
+- router3 por el default gateway va al router4 por eth0
+- router4 lo descarta porque no existen coincidencias --> msj de error: `ICMP Destination Network Unreachable`
+
+d.
+
+- pc-b al router2
+- router2 por el default gateway va al router1 por eth0
+- router1 y router2 se quedan en bucle hasta que el TTL sea 0 (fueron restando el TTL) --> msj de error: `ICMP Destination Host Unreachable`
+
+### 6.
+
+a. ??? XD
+
+b. La red IPv6 utiliza direcciones MAC en las tramas de Ethernet.
+
+c. ??? XD
+
+d. El tamaño maximo de una trama está dado por el MTU (Maximum Transmission Unit), que tiene un valor de 1500 aunque generalmente se utiliza 1460 bytes. El MSS (Maximum Segment Size) indica el tamaño máximo que tendrá un segmento en la capa de transporte para poder entrar en una MTU, suele ser de 40 bytes.
+
 ## Ejercicios de las practicas
 
 ## TP2 - EJ DE PARCIAL
